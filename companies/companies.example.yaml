@@ -1,0 +1,10 @@
+- slug: example
+  name: Example Company
+  website_url: https://example.com
+  careers_url: https://example.com/careers
+  source:
+    type: greenhouse
+    key: example
+  enabled: true
+  refresh_minutes: 60
+  notes: Example only; do not ingest.
