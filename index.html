@@ -37,10 +37,43 @@
         font: 16px/1.55 ui-sans-serif, system-ui, sans-serif;
       }
 
+      .site-header {
+        display: flex;
+        justify-content: flex-end;
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+        padding-top: 24px;
+      }
+
+      .support-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--text);
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: border-color 140ms ease, color 140ms ease, transform 140ms ease;
+      }
+
+      .support-button:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-1px);
+      }
+
+      .support-button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
       main {
         width: min(760px, calc(100% - 40px));
         margin: 0 auto;
-        padding: 12vh 0 72px;
+        padding: 9vh 0 72px;
       }
 
       .eyebrow {
@@ -92,6 +125,12 @@
     </style>
   </head>
   <body>
+    <header class="site-header">
+      <a class="support-button" href="https://ko-fi.com/hearthandrook" target="_blank" rel="noopener noreferrer" aria-label="Support RemoteCurrent on Ko-fi">
+        <span aria-hidden="true">☕</span>
+        Support this project
+      </a>
+    </header>
     <main>
       <div class="eyebrow">Open source · Free forever</div>
       <h1>RemoteCurrent</h1>
