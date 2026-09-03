@@ -23,7 +23,7 @@ Company registry
       |
       v
 ATS collectors (Greenhouse, Lever, Ashby, Recruitee, SmartRecruiters,
-                Workday, Phenom, Microsoft Careers)
+                Workday, Phenom, schema.org JobPosting)
       |
       v
 Normalization -> remote classification -> stable IDs
@@ -76,8 +76,8 @@ python -m http.server 8000
 
 Then open `http://localhost:8000`. The committed registry covers roughly 105
 employers across the direct ATS boards (Greenhouse, Lever, Ashby, Recruitee,
-SmartRecruiters) plus Workday CxS, Phenom, Microsoft Careers, and a schema.org
-`JobPosting` fallback. `crawler/discover.py` grows the registry from public URL
+SmartRecruiters) plus Workday CxS, Phenom, and a schema.org `JobPosting`
+fallback. `crawler/discover.py` grows the registry from public URL
 archives on a weekly schedule. GitHub Actions refreshes the dataset hourly and
 deploys the static board to GitHub Pages.
 

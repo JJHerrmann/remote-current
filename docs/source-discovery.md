@@ -13,11 +13,10 @@ secondary board indexes or receives it.
 
 Workday and bespoke career sites need their own adapters, but the model is the
 same: discover the public career endpoint, normalize its records, retain a
-stable source ID, and send applicants back to the employer. The Workday CxS,
-Phenom, and Microsoft Careers adapters follow this pattern. Those feeds are
-mostly onsite roles, so each narrows server-side first (`searchText=remote`,
-`keywords=remote`, or the careers flag) and lets classification make the final
-call, keeping an hourly crawl bounded.
+stable source ID, and send applicants back to the employer. The Workday CxS and
+Phenom adapters follow this pattern. Those feeds are mostly onsite roles, so
+each narrows server-side first (`searchText=remote`, `keywords=remote`) and lets
+classification make the final call, keeping an hourly crawl bounded.
 
 ## Free registry growth
 
@@ -45,7 +44,6 @@ each crawl.
 - Workday CxS, keyed by host, tenant, and career-site name. The list rows carry
   no description or real date, so each surviving posting takes one detail call.
 - Phenom career sites (for example PepsiCo), keyed by host.
-- Microsoft Careers public search, single fixed host.
 - `jsonld` fallback: fetch a careers URL and parse any server-rendered
   schema.org `JobPosting` blocks (bare, `@graph`, or `ItemList`). Single-page
   apps that inject JSON-LD client-side yield nothing; those need the sitemap
@@ -72,6 +70,9 @@ never removed because an archive missed it.
 
 ## Next adapters
 
+- Microsoft moved off `gcsservices.careers.microsoft.com` (now a bad cert + 404)
+  to `apply.careers.microsoft.com`. The `microsoft` adapter and its registry
+  entry are disabled until the new API is mapped onto the normalized shape.
 - Apple (`jobs.apple.com`) needs a CSRF token bootstrapped from a page load and
   blocks datacenter IPs; the JSON-LD fallback is the more durable route.
 - SAP SuccessFactors career-site OData API — McDonald's (`jobs.mcdonalds.com`)

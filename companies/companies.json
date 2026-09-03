@@ -89,7 +89,7 @@
 
   {"name":"PepsiCo","type":"phenom","key":"pepsico","host":"www.pepsicojobs.com"},
 
-  {"name":"Microsoft","type":"microsoft","key":"microsoft"},
+  {"name":"Microsoft","type":"microsoft","key":"microsoft","enabled":false,"notes":"gcsservices.careers.microsoft.com retired (bad cert + 404); Microsoft moved to apply.careers.microsoft.com. Re-enable once the microsoft adapter is repointed at the new API."},
 
   {"name":"Zapier","type":"ashby","key":"zapier"},
   {"name":"Buffer","type":"ashby","key":"buffer"},

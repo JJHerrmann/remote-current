@@ -260,9 +260,10 @@ MICROSOFT_CAP = 200
 
 
 def microsoft(company: dict[str, str]) -> list[dict[str, Any]]:
-    # careers.microsoft.com public search. Field names follow the documented
-    # response shape but were not exercised against the live host here; a schema
-    # drift surfaces as a per-source error rather than failing the crawl.
+    # RETIRED: gcsservices.careers.microsoft.com now serves a mismatched cert and
+    # 404s; Microsoft migrated to apply.careers.microsoft.com. The registry entry
+    # is disabled. Kept as a starting point for whoever maps the new API onto
+    # this same normalized shape.
     base = "https://gcsservices.careers.microsoft.com/search/api/v1"
     results, page = [], 1
     while len(results) < MICROSOFT_CAP:
