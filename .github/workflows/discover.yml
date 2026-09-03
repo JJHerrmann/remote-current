@@ -1,0 +1,40 @@
+name: Discover new sources
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 6 * * 1"   # Mondays, well clear of the hourly job crawl
+
+permissions:
+  contents: write
+
+concurrency:
+  group: discover
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Harvest and validate candidate boards
+        env:
+          # Optional; lifts urlscan's unauthenticated rate limit. Set as a repo secret.
+          URLSCAN_API_KEY: ${{ secrets.URLSCAN_API_KEY }}
+        run: |
+          # urlscan paginates and handles high-volume hosts; wayback is a slower fallback.
+          python -m crawler.discover --ats greenhouse --source urlscan --limit 250 --apply
+          python -m crawler.discover --ats lever --source urlscan --limit 250 --apply
+          python -m crawler.discover --ats ashby --source urlscan --limit 250 --apply
+      - name: Test the enlarged registry still parses
+        run: python -m unittest discover -s tests
+      - name: Commit new sources
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add companies/companies.json
+          git diff --cached --quiet || git commit -m "Discover: merge new ATS boards"
+          git push

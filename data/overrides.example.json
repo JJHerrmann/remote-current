@@ -1,0 +1,17 @@
+{
+  "overrides": [
+    {
+      "id": "583175d4331014d30911",
+      "action": "drop",
+      "reason": "Employer page shows this role is hybrid, not remote.",
+      "addedAt": "2026-09-03"
+    },
+    {
+      "id": "3e3f6998d33333fe83ec",
+      "action": "set_scope",
+      "value": "region_restricted",
+      "reason": "Listing is EMEA-only; classifier read it as worldwide.",
+      "addedAt": "2026-09-03"
+    }
+  ]
+}

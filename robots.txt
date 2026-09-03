@@ -1,0 +1,5 @@
+# RemoteCurrent — https://github.com/JJHerrmann/remote-current
+User-agent: *
+Allow: /
+
+Sitemap: https://jjherrmann.github.io/remote-current/sitemap.xml
