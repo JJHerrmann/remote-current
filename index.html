@@ -1,46 +1,727 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Fresh remote jobs, direct from employers. Free forever.">
-  <title>RemoteCurrent</title>
-  <style>
-    :root{color-scheme:light dark;--bg:#f5f4ef;--panel:#fffef9;--text:#171713;--muted:#66665d;--line:#d8d6cb;--accent:#176b4d;--soft:#e4f0e9}
-    @media(prefers-color-scheme:dark){:root{--bg:#111310;--panel:#191c18;--text:#f1f0e9;--muted:#aaa99f;--line:#383b35;--accent:#74d5ab;--soft:#20362c}}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:16px/1.5 ui-sans-serif,system-ui,sans-serif}a{color:inherit}
-    header{display:flex;align-items:center;justify-content:space-between;gap:20px;width:min(1180px,calc(100% - 32px));margin:auto;padding:20px 0}.brand{font-weight:850;letter-spacing:-.04em;font-size:1.3rem;text-decoration:none}
-    .support{padding:8px 13px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--text);font:700 .88rem/1.5 inherit;text-decoration:none;cursor:pointer}.support:hover{border-color:var(--accent);color:var(--accent)}
-    main{width:min(1180px,calc(100% - 32px));margin:auto;padding:6vh 0 72px}.eyebrow{color:var(--accent);font-size:.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}h1{max-width:850px;margin:10px 0 15px;font-size:clamp(2.7rem,7vw,5.8rem);letter-spacing:-.065em;line-height:.94}.lede{max-width:720px;margin:0 0 38px;color:var(--muted);font-size:clamp(1.08rem,2.4vw,1.35rem)}
-    .controls{display:grid;grid-template-columns:minmax(220px,2fr) repeat(3,minmax(145px,1fr));gap:10px;padding:15px;border:1px solid var(--line);border-radius:18px;background:var(--panel);position:sticky;top:10px;z-index:3;box-shadow:0 12px 35px color-mix(in srgb,var(--bg) 82%,transparent)}input,select{width:100%;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
-    .meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:22px 2px 12px;color:var(--muted);font-size:.9rem}#jobs{display:grid;gap:11px}.job{display:grid;grid-template-columns:1fr auto;gap:20px;padding:20px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}.job h2{margin:2px 0 5px;font-size:1.15rem;line-height:1.25}.company{color:var(--muted);font-size:.93rem}.facts{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}.pill{padding:4px 8px;border-radius:999px;background:var(--soft);color:var(--accent);font-size:.76rem;font-weight:750}.job-side{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:14px}.age{color:var(--muted);font-size:.78rem;white-space:nowrap}.apply{padding:9px 13px;border-radius:9px;background:var(--accent);color:var(--bg);font-size:.87rem;font-weight:800;text-decoration:none;white-space:nowrap}.empty,.loading{padding:36px;border:1px dashed var(--line);border-radius:15px;color:var(--muted);text-align:center}footer{margin-top:35px;color:var(--muted);font-size:.85rem}
-    @media(max-width:800px){.controls{grid-template-columns:1fr 1fr;position:static}.controls input{grid-column:1/-1}}@media(max-width:540px){.controls{grid-template-columns:1fr}.controls input{grid-column:auto}.job{grid-template-columns:1fr}.job-side{flex-direction:row;align-items:center}h1{font-size:3.2rem}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="An open, hourly index of remote jobs read straight from employer applicant-tracking feeds. No paywall, no accounts — every listing links to the real application and shows where it came from.">
+<title>RemoteCurrent — fresh remote jobs, straight from employers</title>
+<link rel="canonical" href="https://jjherrmann.github.io/remote-current/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Orpheus Rook">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RemoteCurrent">
+<meta property="og:title" content="RemoteCurrent — fresh remote jobs, straight from employers">
+<meta property="og:description" content="An open, hourly index of remote jobs read straight from employer hiring systems. No paywall, no accounts, every link goes to the real application.">
+<meta property="og:url" content="https://jjherrmann.github.io/remote-current/">
+<meta property="og:image" content="https://jjherrmann.github.io/remote-current/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="RemoteCurrent — remote roles, straight off the wire.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RemoteCurrent — fresh remote jobs, straight from employers">
+<meta name="twitter:description" content="An open, hourly index of remote jobs read straight from employer hiring systems. Free forever.">
+<meta name="twitter:image" content="https://jjherrmann.github.io/remote-current/assets/og-image.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#1b1e20">
+<link rel="alternate" type="application/rss+xml" title="RemoteCurrent — all remote jobs" href="feeds/all.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"RemoteCurrent","url":"https://jjherrmann.github.io/remote-current/","logo":"https://jjherrmann.github.io/remote-current/assets/apple-touch-icon.png","founder":{"@type":"Person","name":"Orpheus Rook","url":"https://rook.works"},"sameAs":["https://github.com/JJHerrmann/remote-current","https://ko-fi.com/hearthandrook"]},{"@type":"WebSite","name":"RemoteCurrent","url":"https://jjherrmann.github.io/remote-current/","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://jjherrmann.github.io/remote-current/?q={search_term_string}"},"query-input":"required name=search_term_string"}}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#e4e7e8; --panel:#f4f5f5; --raise:#fbfbfc;
+    --ink:#1b1e20; --muted:#5b6469; --faint:#8a9296;
+    --line:#c9cdce; --line-strong:#b2b8b9;
+    --signal:#a94e18; --signal-ink:#a94e18; --signal-tint:#eee0d6;
+    --verify:#1c7358;
+    --readout-bg:#1b1e20; --readout-ink:#d9dcd7; --readout-muted:#8c948f; --readout-line:#33383a;
+    --sans:'IBM Plex Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --cond:'IBM Plex Sans Condensed','IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono','Roboto Mono',Menlo,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#131619; --panel:#1b1f22; --raise:#20262b;
+      --ink:#e9e6de; --muted:#8b9298; --faint:#697076;
+      --line:#2d3339; --line-strong:#3b434b;
+      --signal:#e2812f; --signal-ink:#e88f42; --signal-tint:#33261b;
+      --verify:#4cbda0;
+      --readout-bg:#0d1012; --readout-ink:#d5d8d3; --readout-muted:#79817d; --readout-line:#242a2c;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#131619; --panel:#1b1f22; --raise:#20262b;
+    --ink:#e9e6de; --muted:#8b9298; --faint:#697076;
+    --line:#2d3339; --line-strong:#3b434b;
+    --signal:#e2812f; --signal-ink:#e88f42; --signal-tint:#33261b;
+    --verify:#4cbda0;
+    --readout-bg:#0d1012; --readout-ink:#d5d8d3; --readout-muted:#79817d; --readout-line:#242a2c;
+    color-scheme:dark;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:400 15px/1.55 var(--sans);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  a{color:inherit}
+  ::selection{background:var(--signal); color:#fff}
+  :focus-visible{outline:2px solid var(--signal); outline-offset:2px; border-radius:2px}
+  .wrap{width:min(1120px,100% - 40px); margin-inline:auto}
+
+  /* ---------- readout strip ---------- */
+  .readout{background:var(--readout-bg); color:var(--readout-ink); border-bottom:1px solid var(--readout-line)}
+  .readout .wrap{
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 22px;
+    padding:9px 0; font:500 11.5px/1.4 var(--mono); letter-spacing:.02em;
+  }
+  .readout b{color:var(--readout-ink); font-weight:600}
+  .readout .k{color:var(--readout-muted); text-transform:uppercase; letter-spacing:.12em; margin-right:6px}
+  .live{display:inline-flex; align-items:center; gap:7px; color:#df7f34; text-transform:uppercase; letter-spacing:.14em; font-weight:600}
+  .live .dot{width:7px; height:7px; border-radius:50%; background:#df7f34; box-shadow:0 0 0 0 #df7f34; animation:pulse 2.4s ease-out infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(223,127,52,.5)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+  body.offline .live{color:var(--readout-muted)}
+  body.offline .live .dot{background:var(--readout-muted); animation:none}
+  #sweepFlash{color:#df7f34; font-weight:600}
+
+  /* ---------- masthead ---------- */
+  .mast{border-bottom:1px solid var(--line)}
+  .mast .wrap{display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:20px 0}
+  .wordmark{
+    display:inline-flex; align-items:baseline; gap:10px; text-decoration:none;
+    font:700 18px/1 var(--cond); letter-spacing:.16em; text-transform:uppercase;
+  }
+  .wordmark .logo{height:22px; width:auto; display:block; align-self:center}
+  .wordmark .logo.dark{display:none}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wordmark .logo.light{display:none} :root:not([data-theme="light"]) .wordmark .logo.dark{display:block}}
+  :root[data-theme="dark"] .wordmark .logo.light{display:none}
+  :root[data-theme="dark"] .wordmark .logo.dark{display:block}
+  :root[data-theme="light"] .wordmark .logo.light{display:block}
+  :root[data-theme="light"] .wordmark .logo.dark{display:none}
+  .wordmark span{color:var(--muted); font-weight:500}
+  .support{
+    font:600 12px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase;
+    text-decoration:none; padding:9px 14px; border:1px solid var(--line-strong);
+    border-radius:2px; color:var(--ink); white-space:nowrap; transition:border-color .15s,color .15s;
+  }
+  .support:hover{border-color:var(--signal); color:var(--signal-ink)}
+
+  /* ---------- hero ---------- */
+  .hero .wrap{padding:44px 0 30px}
+  .eyebrow{
+    margin:0 0 14px; font:600 11px/1 var(--cond); letter-spacing:.24em;
+    text-transform:uppercase; color:var(--signal-ink);
+  }
+  h1{
+    margin:0; font:600 clamp(2rem,1.3rem + 2.6vw,3.05rem)/1.06 var(--sans);
+    letter-spacing:-.022em; text-wrap:balance; max-width:15ch;
+  }
+  .lede{margin:16px 0 0; color:var(--muted); font-size:1.03rem; max-width:56ch}
+
+  .legend{margin:24px 0 0; display:flex; flex-wrap:wrap; gap:8px 10px; padding:0; list-style:none}
+  .legend li{
+    display:flex; gap:8px; align-items:flex-start; padding:8px 11px;
+    border:1px solid var(--line); border-radius:2px; background:var(--panel);
+    font-size:12px; color:var(--muted); max-width:220px;
+  }
+  .legend .gl{font:600 12px/1.35 var(--mono); color:var(--ink); letter-spacing:.02em}
+  .legend .gm{font-family:var(--mono); color:var(--signal-ink); flex:none}
+
+  .scope-note{margin:18px 0 0; font:400 12px/1.5 var(--mono); color:var(--faint); max-width:82ch}
+
+  /* ---------- telemetry strip ---------- */
+  .telemetry{border-top:1px solid var(--line); background:var(--panel)}
+  .telemetry .wrap{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,340px); gap:10px 40px;
+    padding:16px 0 15px; align-items:center;
+  }
+  .tele-head{display:flex; align-items:baseline; gap:12px; margin-bottom:6px}
+  .tele-head h2{margin:0; font:600 10.5px/1 var(--cond); letter-spacing:.22em; text-transform:uppercase; color:var(--muted)}
+  .tele-head span{font:400 10.5px/1 var(--mono); color:var(--faint)}
+  .spark{display:block; width:100%; height:58px; overflow:visible}
+  .spark .fill{fill:var(--signal); opacity:.13}
+  .spark .stroke{fill:none; stroke:var(--signal); stroke-width:1.5; vector-effect:non-scaling-stroke}
+  .spark .base{stroke:var(--line-strong); stroke-width:1; vector-effect:non-scaling-stroke}
+  .spark .end{fill:var(--signal)}
+  .spark-x{display:flex; justify-content:space-between; margin-top:4px; font:400 9px/1 var(--mono); letter-spacing:.06em; color:var(--faint); text-transform:uppercase}
+  .tele-stats{display:grid; grid-template-columns:1fr 1fr; gap:9px 14px}
+  .tele-stats div{display:flex; flex-direction:column; gap:2px}
+  .tele-stats dt{font:600 9px/1 var(--cond); letter-spacing:.14em; text-transform:uppercase; color:var(--faint)}
+  .tele-stats dd{margin:0; font:600 16px/1 var(--mono); color:var(--ink); font-variant-numeric:tabular-nums}
+  .tele-stats dd b{color:var(--signal-ink); font-weight:600}
+  .tele-stats dd small{font-size:10px; font-weight:400; color:var(--faint)}
+
+  /* ---------- control desk ---------- */
+  .desk{position:sticky; top:0; z-index:20; background:var(--bg); border-block:1px solid var(--line)}
+  .desk .wrap{
+    display:grid; gap:1px; background:var(--line);
+    grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    border-inline:1px solid var(--line);
+  }
+  .field{display:flex; flex-direction:column; background:var(--bg); padding:9px 10px 7px}
+  .field > label{font:600 9.5px/1 var(--cond); letter-spacing:.16em; text-transform:uppercase; color:var(--faint); margin-bottom:5px}
+  .field input,.field select{
+    appearance:none; -webkit-appearance:none; border:0; background:transparent; color:var(--ink);
+    font:500 13px/1.3 var(--mono); padding:2px 0; width:100%; min-width:0;
+  }
+  .field select{cursor:pointer; padding-right:14px; background:
+    linear-gradient(45deg,transparent 50%,var(--muted) 50%) calc(100% - 6px) 55%/5px 5px no-repeat,
+    linear-gradient(135deg,var(--muted) 50%,transparent 50%) calc(100% - 1px) 55%/5px 5px no-repeat;}
+  .field.check{flex-direction:row; align-items:center; gap:8px; cursor:pointer}
+  .field.check label{margin:0; font:600 11px/1.2 var(--cond); letter-spacing:.08em; color:var(--muted); text-transform:uppercase; cursor:pointer}
+  .field.check input{width:15px; height:15px; flex:none; margin:0; cursor:pointer; accent-color:var(--signal)}
+  .field:focus-within > label{color:var(--signal-ink)}
+
+  /* ---------- board ---------- */
+  .board{padding:22px 0 60px}
+  .tally{
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 16px;
+    padding:0 0 8px; font:500 12px/1.4 var(--mono); color:var(--muted);
+  }
+  .tally b{color:var(--ink); font-weight:600}
+  .tally .rule{flex:1; height:1px; background:var(--line); min-width:20px}
+  .subscribe{display:inline-flex; gap:8px; flex:none}
+  .linkbtn{
+    appearance:none; background:transparent; cursor:pointer;
+    border:1px solid var(--line-strong); border-radius:2px; padding:5px 9px;
+    font:600 10px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; transition:border-color .15s,color .15s;
+  }
+  .linkbtn:hover{border-color:var(--signal); color:var(--signal-ink)}
+
+  .rows{display:flex; flex-direction:column}
+  .row{
+    display:grid; grid-template-columns:1fr 138px; gap:12px 22px;
+    padding:16px 14px 16px 16px; border-bottom:1px solid var(--line);
+    border-left:2px solid color-mix(in srgb, var(--signal) calc(var(--fresh, .3) * 100%), transparent);
+    transition:background .12s;
+  }
+  .row:first-child{border-top:1px solid var(--line)}
+  .row:hover{background:var(--panel)}
+  .co{font:500 11px/1.3 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+  .co b{color:var(--ink); font-weight:600}
+  .ttl{margin:3px 0 2px; font:600 1.04rem/1.3 var(--sans); letter-spacing:-.006em}
+  .loc{font-size:13px; color:var(--muted)}
+  .chips{display:flex; flex-wrap:wrap; gap:5px 6px; margin-top:11px}
+  .chip{
+    display:inline-flex; align-items:center; gap:6px; padding:3px 8px;
+    border:1px solid var(--line); border-radius:2px; background:var(--raise);
+    font:400 11.5px/1.5 var(--mono); color:var(--muted); white-space:nowrap;
+  }
+  .chip .cdot{width:6px; height:6px; border-radius:50%; flex:none; background:var(--faint)}
+  .chip.sig{color:var(--ink)}
+  .chip.sig .cdot{background:var(--signal)}
+  .chip.open .cdot{background:var(--verify)}
+  .chip.conf{color:var(--faint)}
+  .chip .em{color:var(--verify); font-style:normal}
+  .chip .inf{color:var(--faint); font-style:italic}
+  .chip.src{text-transform:uppercase; letter-spacing:.08em; color:var(--ink); border-style:dashed}
+  .chip.pay{color:var(--ink); border-color:var(--line-strong)}
+
+  .rail{display:flex; flex-direction:column; align-items:flex-end; gap:9px; text-align:right}
+  .bars{display:flex; align-items:flex-end; gap:3px; height:20px}
+  .bars i{width:5px; background:var(--line-strong); display:block}
+  .bars i.on{background:var(--signal)}
+  .bars i:nth-child(1){height:35%}
+  .bars i:nth-child(2){height:58%}
+  .bars i:nth-child(3){height:80%}
+  .bars i:nth-child(4){height:100%}
+  .age{font:500 11px/1.3 var(--mono); color:var(--muted); letter-spacing:.02em}
+  .age.new{color:var(--signal-ink)}
+  .apply{
+    margin-top:2px; font:600 11px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase;
+    text-decoration:none; color:var(--ink); border:1px solid var(--line-strong);
+    border-radius:2px; padding:8px 11px; white-space:nowrap; transition:border-color .15s,color .15s,background .15s;
+  }
+  .apply:hover{border-color:var(--signal); color:#fff; background:var(--signal)}
+  .rail .flag{font:400 10px/1 var(--mono); letter-spacing:.04em; color:var(--faint); text-decoration:none}
+  .rail .flag:hover{color:var(--signal-ink)}
+  .chip.ok{color:var(--verify); border-color:var(--verify)}
+  .chip.ok .cdot{background:var(--verify)}
+
+  .more{
+    margin:22px auto 0; display:block; background:transparent; cursor:pointer;
+    font:600 11px/1 var(--cond); letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+    border:1px solid var(--line-strong); border-radius:2px; padding:12px 22px;
+  }
+  .more:hover{border-color:var(--signal); color:var(--signal-ink)}
+  .empty{padding:44px 16px; border:1px dashed var(--line-strong); border-radius:2px; text-align:center; color:var(--muted); font-family:var(--mono); font-size:13px}
+
+  footer{border-top:1px solid var(--line); padding:26px 0 40px}
+  footer .wrap{display:flex; flex-wrap:wrap; gap:10px 20px; justify-content:space-between; font-size:12px; color:var(--faint); font-family:var(--mono)}
+  footer a{color:var(--muted)}
+
+  @media (max-width:820px){
+    .telemetry .wrap{grid-template-columns:1fr; gap:16px}
+    .desk .wrap{grid-template-columns:1fr 1fr 1fr; border-inline:0}
+    .desk{position:static}
+    .field:nth-child(1){grid-column:1/-1}
+  }
+  @media (max-width:560px){
+    .wrap{width:calc(100% - 28px)}
+    .desk .wrap{grid-template-columns:1fr 1fr}
+    .row{grid-template-columns:1fr; gap:14px}
+    .rail{flex-direction:row; align-items:center; justify-content:flex-start; gap:14px; text-align:left}
+    .mast .wrap{flex-wrap:wrap; gap:12px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:0s !important; transition-duration:0s !important}
+  }
+</style>
 </head>
 <body>
-  <header><a class="brand" href="./">RemoteCurrent</a><a class="support" href="https://ko-fi.com/hearthandrook" target="_blank" rel="noopener noreferrer">☕ Support this project</a></header>
-  <main>
-    <div class="eyebrow">Open source · Free forever</div><h1>Fresh remote work, without the paywall.</h1>
-    <p class="lede">Jobs collected directly from employer career systems. Every result shows where it came from and sends you to the original application.</p>
-    <section class="controls" aria-label="Job filters">
-      <input id="query" type="search" placeholder="Search title, company, skill…" autocomplete="off">
-      <select id="scope" aria-label="Remote scope"><option value="">All remote scopes</option></select>
-      <select id="company" aria-label="Company"><option value="">All companies</option></select>
-      <select id="source" aria-label="Source"><option value="">All sources</option></select>
-    </section>
-    <div class="meta"><span id="count">Loading current jobs…</span><span id="updated"></span></div>
-    <section id="jobs" aria-live="polite"><div class="loading">Fetching the latest board…</div></section>
-    <footer>Listings are classified automatically and may contain errors. Verify location and eligibility on the employer’s page before applying. <a href="https://github.com/JJHerrmann/remote-current">Source and methodology</a>.</footer>
-  </main>
-  <script>
-    const state={jobs:[],filtered:[],shown:0},labels={worldwide:"Worldwide",country_restricted:"Country restricted",region_restricted:"Region restricted",remote_unspecified:"Remote — scope unclear"};
-    const $=id=>document.getElementById(id),escapeHtml=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
-    const option=(value,label)=>`<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`;
-    function age(value){if(!value)return"Date unknown";const hours=Math.max(0,Math.floor((Date.now()-new Date(value))/36e5));return hours<1?"New":hours<24?`${hours}h ago`:`${Math.floor(hours/24)}d ago`}
-    function fillFilters(){const unique=key=>[...new Set(state.jobs.map(j=>j[key]).filter(Boolean))].sort();$("scope").innerHTML+=unique("remoteType").map(v=>option(v,labels[v]||v)).join("");$("company").innerHTML+=unique("company").map(v=>option(v,v)).join("");$("source").innerHTML+=unique("source").map(v=>option(v,v[0].toUpperCase()+v.slice(1))).join("")}
-    function filter(){const q=$("query").value.trim().toLowerCase(),scope=$("scope").value,company=$("company").value,source=$("source").value;state.filtered=state.jobs.filter(j=>(!scope||j.remoteType===scope)&&(!company||j.company===company)&&(!source||j.source===source)&&(!q||[j.title,j.company,j.location,j.department,j.employmentType].join(" ").toLowerCase().includes(q)));state.shown=Math.min(50,state.filtered.length);const params=new URLSearchParams(location.search);[["q",q],["scope",scope],["company",company],["source",source]].forEach(([key,value])=>value?params.set(key,value):params.delete(key));history.replaceState(null,"",`${location.pathname}${params.size?`?${params}`:""}`);render()}
-    function render(){$("count").textContent=`${state.filtered.length.toLocaleString()} current job${state.filtered.length===1?"":"s"}`;const rows=state.filtered.slice(0,state.shown).map(j=>`<article class="job"><div><div class="company">${escapeHtml(j.company)} · ${escapeHtml(j.department||j.employmentType||j.source)}</div><h2>${escapeHtml(j.title)}</h2><div class="company">${escapeHtml(j.location)}</div><div class="facts"><span class="pill">${escapeHtml(labels[j.remoteType]||j.remoteType)}</span>${j.salaryText?`<span class="pill">${escapeHtml(j.salaryText)}</span>`:""}<span class="pill">${escapeHtml(j.source)}</span></div></div><div class="job-side"><span class="age" title="First seen ${escapeHtml(j.firstSeenAt)}">${age(j.postedAt||j.firstSeenAt)}</span><a class="apply" href="${escapeHtml(j.url)}" target="_blank" rel="noopener noreferrer">Apply directly ↗</a></div></article>`).join("");$("jobs").innerHTML=rows||'<div class="empty">No jobs match those filters.</div>';if(state.shown<state.filtered.length){const button=document.createElement("button");button.textContent=`Show more (${state.filtered.length-state.shown} remaining)`;button.className="support";button.style.margin="12px auto";button.onclick=()=>{state.shown=Math.min(state.shown+50,state.filtered.length);render()};$("jobs").append(button)}}
-    ["query","scope","company","source"].forEach(id=>$(id).addEventListener(id==="query"?"input":"change",filter));
-    fetch("data/jobs.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()}).then(data=>{state.jobs=data.jobs||[];$("updated").textContent=`Updated ${new Date(data.generatedAt).toLocaleString()}`;fillFilters();const params=new URLSearchParams(location.search);$("query").value=params.get("q")||"";["scope","company","source"].forEach(id=>{const value=params.get(id);if(value&&[...$(id).options].some(item=>item.value===value))$(id).value=value});filter()}).catch(error=>{$("count").textContent="Board unavailable";$("jobs").innerHTML=`<div class="empty">Could not load jobs: ${escapeHtml(error.message)}</div>`});
-  </script>
+<div class="readout">
+  <div class="wrap">
+    <span class="live"><span class="dot"></span> <span id="feedState">Connecting&hellip;</span></span>
+    <span><span class="k">Listings</span><b id="rTotal">&mdash;</b></span>
+    <span><span class="k">ATS feeds</span><b id="rSrc">&mdash;</b></span>
+    <span><span class="k">Employers</span><b id="rCo">&mdash;</b></span>
+    <span><span class="k">Last sweep</span><b id="rSweep">&mdash;</b></span>
+    <span><span class="k">Next sweep</span><b id="rNext">&mdash;</b> <span id="sweepFlash"></span></span>
+  </div>
+</div>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="wordmark" href="./"><img class="logo light" src="assets/logo-light.png" width="51" height="22" alt="" aria-hidden="true"><img class="logo dark" src="assets/logo-dark.png" width="51" height="22" alt="" aria-hidden="true">RemoteCurrent <span>/ signal desk</span></a>
+    <a class="support" href="https://ko-fi.com/hearthandrook" target="_blank" rel="noopener noreferrer">Support the feed</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Open index &middot; refreshed hourly</p>
+    <h1>Remote roles, straight off the wire.</h1>
+    <p class="lede">Every listing here was read directly from an employer&rsquo;s applicant-tracking feed &mdash; no repost, no middleman, no paywall. You see which system it came from, the employer&rsquo;s posted date, and that it was still live in the latest sweep.</p>
+
+    <ul class="legend">
+      <li><span class="gm">&#9670;</span><span><span class="gl">SOURCE</span><br>Which ATS the listing was read from.</span></li>
+      <li><span class="gm">&#8967;</span><span><span class="gl">POSTED</span><br>The employer&rsquo;s own posting date &mdash; used for ordering.</span></li>
+      <li><span class="gm">&#10003;</span><span><span class="gl">SWEEP</span><br>Every listing below was present in the latest hourly sweep.</span></li>
+    </ul>
+    <p class="scope-note">Ordered by posted date, newest first. Employers cannot buy position. Remote scope is classified automatically with a stated confidence &mdash; confirm location and eligibility on the employer&rsquo;s page before applying.</p>
+  </div>
+</section>
+
+<section class="telemetry" aria-label="Feed intake over the last 48 hours">
+  <div class="wrap">
+    <div>
+      <div class="tele-head"><h2>Intake</h2><span>listings posted per hour &middot; last 48h</span></div>
+      <svg class="spark" id="spark" viewBox="0 0 300 58" preserveAspectRatio="none" role="img" aria-label="Hourly listing intake over the last 48 hours"></svg>
+      <div class="spark-x"><span>48h ago</span><span>now</span></div>
+    </div>
+    <dl class="tele-stats">
+      <div><dt>Busiest hour</dt><dd><b id="sPeak">&mdash;</b> <small>/h</small></dd></div>
+      <div><dt>Median hour</dt><dd><span id="sMed">&mdash;</span> <small>/h</small></dd></div>
+      <div><dt>Posted in 48h</dt><dd id="sTot">&mdash;</dd></div>
+      <div><dt>Feeds with errors</dt><dd id="sSrc">&mdash;</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="desk" aria-label="Filter the feed">
+  <div class="wrap">
+    <div class="field">
+      <label for="q">Search</label>
+      <input id="q" type="search" placeholder="title, company, place&hellip;" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="fScope">Scope</label>
+      <select id="fScope"><option value="">any</option></select>
+    </div>
+    <div class="field">
+      <label for="fCo">Employer</label>
+      <select id="fCo"><option value="">any</option></select>
+    </div>
+    <div class="field">
+      <label for="fSrc">Source</label>
+      <select id="fSrc"><option value="">any</option></select>
+    </div>
+    <div class="field">
+      <label for="fExp">Level</label>
+      <select id="fExp"><option value="">any</option></select>
+    </div>
+    <div class="field">
+      <label for="fEmp">Type</label>
+      <select id="fEmp"><option value="">any</option></select>
+    </div>
+    <div class="field check">
+      <input id="fPay" type="checkbox">
+      <label for="fPay">Pay shown</label>
+    </div>
+  </div>
+</section>
+
+<main class="board">
+  <div class="wrap">
+    <div class="tally">
+      <span><b id="tCount">0</b> shown</span>
+      <span id="tFiltered"></span>
+      <span class="rule"></span>
+      <span id="tSample"></span>
+      <span class="subscribe">
+        <button type="button" id="copyLink" class="linkbtn" title="Copy a link to this exact search">Copy search link</button>
+        <a id="rssLink" class="linkbtn" href="feeds/all.xml" target="_blank" rel="noopener noreferrer" title="Subscribe to the standing feed that best matches these filters">&#9670; RSS</a>
+      </span>
+    </div>
+    <div class="rows" id="rows" aria-live="polite"><div class="empty" style="border-style:solid">Fetching the current feed&hellip;</div></div>
+    <button class="more" id="more" hidden>Show more</button>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Listings are classified automatically and may contain errors. Verify location and eligibility on the employer&rsquo;s page before applying.</span>
+    <span><a href="sources.html">Feed status</a> &middot; <a href="about.html">About</a> &middot; <a href="deprecated/">Previous design</a> &middot; <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">Source &#8599;</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  const PAGE = 24;
+  const REFRESH_MS = 5 * 60 * 1000;
+  const CRON_MIN = 17;                 // .github/workflows/pages.yml -> schedule cron "17 * * * *"
+  const HOUR = 3600000;
+
+  const SCOPE = {
+    worldwide:          { label: "Worldwide",         cls: "open" },
+    region_restricted:  { label: "Region-restricted", cls: "sig" },
+    country_restricted: { label: "Country-restricted", cls: "sig" },
+    remote_unspecified: { label: "Scope unclear",     cls: "" }
+  };
+  const EXP = { internship:"Internship", entry:"Entry", mid:"Mid", senior:"Senior",
+    lead:"Staff / lead", manager:"Manager", director:"Director", executive:"Executive", unspecified:"" };
+  const EMP = { full_time:"Full-time", part_time:"Part-time", contract:"Contract",
+    internship:"Internship", unspecified:"" };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g,
+    c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  const pad2 = n => String(n).padStart(2, "0");
+
+  let META = null, JOBS = [], view = [], shown = PAGE;
+
+  const stamp = t => {
+    if (!t) return "--:--Z";
+    const d = new Date(t);
+    return `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}Z`;
+  };
+  const postedTs = j => new Date(j.postedAt || j.firstSeenAt || j.lastSeenAt || 0).getTime();
+  const ageHours = j => (Date.now() - postedTs(j)) / HOUR;
+  const freshness = h => Math.max(0, Math.min(1, 1 - h / 72));
+  const rel = h => {
+    if (h < 1) return "under 1h";
+    if (h < 24) return `${Math.round(h)}h`;
+    if (h < 24 * 14) return `${Math.round(h / 24)}d`;
+    return `${Math.round(h / 168)}w`;
+  };
+
+  /* ---------- derive the readout / telemetry numbers from the raw feed ---------- */
+  function deriveMeta(data){
+    const jobs = data.jobs || [];
+    const now = Date.now();
+    const sources = [...new Set(jobs.map(j => j.source).filter(Boolean))];
+    const spark = new Array(48).fill(0);
+    for (const j of jobs){
+      const t = j.postedAt || j.firstSeenAt;
+      if (!t) continue;
+      const h = (now - new Date(t).getTime()) / HOUR;
+      if (h >= 0 && h < 48) spark[47 - Math.floor(h)]++;
+    }
+    const nz = spark.filter(Boolean).sort((a, b) => a - b);
+    return {
+      generatedAt: data.generatedAt,
+      jobCount: data.jobCount != null ? data.jobCount : jobs.length,
+      companyCount: data.companyCount != null ? data.companyCount
+                  : new Set(jobs.map(j => j.company)).size,
+      sourceCount: sources.length,
+      sourceErrors: (data.sourceErrors || []).length,
+      spark48h: spark,
+      peakHour: Math.max(0, ...spark),
+      medianHour: nz.length ? nz[Math.floor(nz.length / 2)] : 0,
+      last48Total: spark.reduce((a, b) => a + b, 0)
+    };
+  }
+
+  /* ---------- clock: last sweep from the feed, next from the deploy cron ---------- */
+  function nextSweepFrom(ms){
+    const d = new Date(ms);
+    d.setUTCSeconds(0, 0);
+    if (d.getUTCMinutes() >= CRON_MIN) d.setUTCHours(d.getUTCHours() + 1);
+    d.setUTCMinutes(CRON_MIN);
+    return d.getTime();
+  }
+  function tickClock(){
+    const now = Date.now();
+    const last = META && META.generatedAt ? new Date(META.generatedAt).getTime() : now;
+    $("rSweep").textContent = META && META.generatedAt ? stamp(META.generatedAt) : "—";
+    const rem = Math.max(0, nextSweepFrom(Math.max(now, last)) - now);
+    $("rNext").textContent = `${pad2(Math.floor(rem / 60000))}m ${pad2(Math.floor((rem % 60000) / 1000))}s`;
+  }
+  let flashTimer = 0;
+  function flash(text){
+    $("sweepFlash").textContent = text;
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => { $("sweepFlash").textContent = ""; }, 6000);
+  }
+
+  /* ---------- subscribe: link the standing RSS feed closest to the filters ---------- */
+  let FEEDS = [];   // [{title, path, count}] from feeds/index.json
+  const slugify = s => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "feed";
+  function bestFeed(){
+    const scope = $("fScope").value, co = $("fCo").value, src = $("fSrc").value, pay = $("fPay").checked;
+    let path = "feeds/all.xml";
+    if (scope === "worldwide") path = "feeds/worldwide.xml";
+    else if (co) path = `feeds/company-${slugify(co)}.xml`;
+    else if (src) path = `feeds/source-${slugify(src)}.xml`;
+    else if (pay) path = "feeds/with-salary.xml";
+    if (FEEDS.length && !FEEDS.some(f => f.path === path)) path = "feeds/all.xml";
+    return path;
+  }
+  function refreshSubscribe(){
+    const link = $("rssLink");
+    link.href = bestFeed();
+    const textSearch = $("q").value.trim();
+    link.title = textSearch
+      ? "RSS follows the dropdown filters, not the text search"
+      : "Subscribe to the standing feed that best matches these filters";
+  }
+
+  /* ---------- telemetry strip ---------- */
+  function renderTelemetry(){
+    const v = META.spark48h, W = 300, H = 58, p = 3, n = v.length;
+    const max = Math.max(1, ...v);
+    const step = (W - p * 2) / (n - 1);
+    const pts = v.map((d, i) => [p + i * step, H - p - (d / max) * (H - p * 2 - 6)]);
+    const line = pts.map((pt, i) => `${i ? "L" : "M"}${pt[0].toFixed(1)} ${pt[1].toFixed(1)}`).join(" ");
+    const area = `${line} L ${pts[n - 1][0].toFixed(1)} ${H - p} L ${pts[0][0].toFixed(1)} ${H - p} Z`;
+    const e = pts[n - 1];
+    $("spark").innerHTML =
+      `<path class="fill" d="${area}"/>` +
+      `<line class="base" x1="${p}" y1="${H - p}" x2="${W - p}" y2="${H - p}"/>` +
+      `<path class="stroke" d="${line}"/>` +
+      `<circle class="end" cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="2.6"/>`;
+    $("sPeak").textContent = META.peakHour;
+    $("sMed").textContent = META.medianHour;
+    $("sTot").textContent = META.last48Total.toLocaleString();
+    $("sSrc").textContent = META.sourceErrors === 0 ? "none" : String(META.sourceErrors);
+    $("rTotal").textContent = META.jobCount.toLocaleString();
+    $("rSrc").textContent = META.sourceCount;
+    $("rCo").textContent = META.companyCount;
+  }
+
+  /* ---------- filters ---------- */
+  const uniq = key => [...new Set(JOBS.map(j => j[key]).filter(Boolean))].sort();
+  function fillSelect(sel, values, label){
+    sel.length = 1;                                   // keep the "any" option
+    for (const v of values){
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = label ? label(v) : v;
+      sel.appendChild(o);
+    }
+  }
+  function setSelect(id, value){
+    const sel = $(id);
+    if (value && [...sel.options].some(o => o.value === value)) sel.value = value;
+  }
+  function syncFilterOptions(){
+    const keep = {};
+    for (const id of ["fScope", "fCo", "fSrc", "fExp", "fEmp"]) keep[id] = $(id).value;
+    fillSelect($("fScope"), uniq("remoteType"), v => (SCOPE[v] || {}).label || v);
+    fillSelect($("fCo"), uniq("company"));
+    fillSelect($("fSrc"), uniq("source"), v => v.toUpperCase());
+    fillSelect($("fExp"), uniq("experienceLevel").filter(v => v !== "unspecified"), v => EXP[v] || v);
+    fillSelect($("fEmp"), uniq("employmentCategory").filter(v => v !== "unspecified"), v => EMP[v] || v);
+    for (const id of ["fScope", "fCo", "fSrc", "fExp", "fEmp"]) setSelect(id, keep[id]);
+  }
+  function applyParamsToControls(){
+    const q = new URLSearchParams(location.search);
+    $("q").value = q.get("q") || "";
+    setSelect("fScope", q.get("scope"));
+    setSelect("fCo", q.get("company"));
+    setSelect("fSrc", q.get("source"));
+    setSelect("fExp", q.get("experience"));
+    setSelect("fEmp", q.get("employment"));
+    $("fPay").checked = q.get("pay") === "1";
+  }
+
+  /* ---------- rows ---------- */
+  function chipScope(j){
+    const s = SCOPE[j.remoteType] || { label: j.remoteType || "Unknown", cls: "" };
+    const conf = (j.remoteConfidence != null && j.remoteConfidence < 0.9)
+      ? `<span class="chip conf">conf ${j.remoteConfidence.toFixed(2)}</span>` : "";
+    return `<span class="chip ${s.cls}" title="${esc(j.remoteEvidence || "")}">` +
+           `<span class="cdot"></span>${esc(s.label)}</span>${conf}`;
+  }
+  function chipExp(j){
+    if (!j.experienceLevel || j.experienceLevel === "unspecified") return "";
+    const tag = j.experienceInferred
+      ? '<span class="inf">&nbsp;&middot; inferred</span>'
+      : '<span class="em">&nbsp;&middot; ATS</span>';
+    return `<span class="chip">${esc(EXP[j.experienceLevel] || j.experienceLevel)}${tag}</span>`;
+  }
+  const REPO = "https://github.com/JJHerrmann/remote-current";
+  function flagUrl(j){
+    const title = `Correction: ${j.company} — ${j.title}`;
+    const body = [
+      `Listing ID: ${j.id}`,
+      `Job URL: ${j.url}`,
+      `Current classification: ${j.remoteType}` + (j.remoteConfidence != null ? ` (confidence ${j.remoteConfidence})` : ""),
+      `Source: ${j.source}`,
+      "",
+      "What's wrong (e.g. hybrid not remote, wrong region, role is closed):",
+      "",
+    ].join("\n");
+    return `${REPO}/issues/new?labels=correction&title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+  }
+
+  function rowHTML(j){
+    const h = ageHours(j), f = freshness(h);
+    const lit = Math.round(f * 4);
+    let bars = "";
+    for (let i = 1; i <= 4; i++) bars += `<i class="${i <= lit ? "on" : ""}"></i>`;
+    const emp = EMP[j.employmentCategory] || "";
+    const dept = j.department ? esc(j.department) : emp;
+    return `<article class="row" style="--fresh:${f.toFixed(3)}">` +
+      `<div>` +
+        `<div class="co"><b>${esc(j.company)}</b>${dept ? ` &nbsp;/&nbsp; ${dept}` : ""}</div>` +
+        `<h2 class="ttl">${esc(j.title)}</h2>` +
+        `<div class="loc">${esc(j.location)}</div>` +
+        `<div class="chips">` +
+          chipScope(j) +
+          chipExp(j) +
+          (emp && j.department ? `<span class="chip">${emp}</span>` : "") +
+          (j.salaryText ? `<span class="chip pay">${esc(j.salaryText)}</span>` : "") +
+          `<span class="chip">&#8967; posted ${rel(h)}</span>` +
+          `<span class="chip src">&#9670; ${esc(j.source)}</span>` +
+          (j.correction ? `<span class="chip ok" title="${esc(j.correction.reason || "Manually corrected")}"><span class="cdot"></span>&#10003; corrected</span>` : "") +
+        `</div>` +
+      `</div>` +
+      `<div class="rail">` +
+        `<div class="bars" title="freshness — from the employer's posted date">${bars}</div>` +
+        `<div class="age${h < 2 ? " new" : ""}">${h < 2 ? "NEW" : rel(h) + " ago"}</div>` +
+        `<a class="apply" href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Apply direct &#8599;</a>` +
+        `<a class="flag" href="${esc(flagUrl(j))}" target="_blank" rel="noopener noreferrer" title="Report a misclassified or closed listing">&#9873; flag</a>` +
+      `</div>` +
+    `</article>`;
+  }
+
+  /* ---------- filter + render ---------- */
+  function apply(){
+    const q = $("q").value.trim().toLowerCase();
+    const scope = $("fScope").value, co = $("fCo").value, src = $("fSrc").value,
+          exp = $("fExp").value, emp = $("fEmp").value, pay = $("fPay").checked;
+
+    view = JOBS.filter(j => {
+      if (scope && j.remoteType !== scope) return false;
+      if (co && j.company !== co) return false;
+      if (src && j.source !== src) return false;
+      if (exp && j.experienceLevel !== exp) return false;
+      if (emp && j.employmentCategory !== emp) return false;
+      if (pay && !j.salaryText) return false;
+      if (q){
+        const hay = `${j.title} ${j.company} ${j.location} ${j.department || ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    }).sort((a, b) => postedTs(b) - postedTs(a));
+
+    const params = new URLSearchParams();
+    if (q) params.set("q", q);
+    if (scope) params.set("scope", scope);
+    if (co) params.set("company", co);
+    if (src) params.set("source", src);
+    if (exp) params.set("experience", exp);
+    if (emp) params.set("employment", emp);
+    if (pay) params.set("pay", "1");
+    history.replaceState(null, "", params.toString() ? `?${params}` : location.pathname);
+
+    refreshSubscribe();
+    shown = PAGE;
+    render();
+  }
+
+  function render(){
+    const slice = view.slice(0, shown);
+    $("rows").innerHTML = slice.length
+      ? slice.map(rowHTML).join("")
+      : '<div class="empty">No listings match those filters.</div>';
+    $("tCount").textContent = slice.length.toLocaleString();
+    $("tFiltered").textContent = (JOBS.length && view.length !== JOBS.length)
+      ? `of ${view.length.toLocaleString()} matched` : "";
+    $("tSample").textContent = META
+      ? `${JOBS.length.toLocaleString()} live listings · all seen in the ${stamp(META.generatedAt)} sweep` : "";
+    const more = $("more");
+    if (shown < view.length){
+      more.hidden = false;
+      more.textContent = `Show more — ${(view.length - shown).toLocaleString()} below`;
+    } else {
+      more.hidden = true;
+    }
+  }
+
+  /* ---------- load the feed ---------- */
+  async function load(initial){
+    try {
+      const res = await fetch("data/jobs.json", { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const changed = !!META && data.generatedAt !== META.generatedAt;
+
+      META = deriveMeta(data);
+      JOBS = data.jobs || [];
+      document.body.classList.remove("offline");
+      $("feedState").textContent = "Feed live";
+
+      syncFilterOptions();
+      renderTelemetry();
+      tickClock();
+      if (initial) applyParamsToControls();
+      apply();
+      if (changed) flash("— updated");
+    } catch (err) {
+      document.body.classList.add("offline");
+      $("feedState").textContent = "Feed offline";
+      // Keep the build-time prerendered listings visible rather than blanking them.
+      if ((initial || !META) && !$("rows").querySelector(".row")){
+        $("rows").innerHTML =
+          `<div class="empty">Could not load the feed: ${esc(err.message)}. ` +
+          `Try again shortly, or read the <a href="https://github.com/JJHerrmann/remote-current">methodology</a>.</div>`;
+        $("tCount").textContent = "0";
+      }
+    }
+  }
+
+  for (const id of ["q", "fScope", "fCo", "fSrc", "fExp", "fEmp", "fPay"])
+    $(id).addEventListener(id === "q" ? "input" : "change", apply);
+  $("more").addEventListener("click", () => { shown += PAGE; render(); });
+  $("copyLink").addEventListener("click", () => {
+    const done = () => flash("— search link copied");
+    if (navigator.clipboard && navigator.clipboard.writeText)
+      navigator.clipboard.writeText(location.href).then(done, () => flash("— press Ctrl/Cmd+C to copy"));
+    else flash("— press Ctrl/Cmd+C to copy");
+  });
+
+  fetch("feeds/index.json", { cache: "no-store" })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && d.feeds) { FEEDS = d.feeds; refreshSubscribe(); } })
+    .catch(() => {});
+
+  tickClock();
+  setInterval(tickClock, 1000);
+  load(true);
+  setInterval(() => load(false), REFRESH_MS);
+})();
+</script>
 </body>
 </html>
