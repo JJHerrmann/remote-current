@@ -51,6 +51,21 @@ Public records should expose source, canonical application URL, first-seen
 time, last-verified time, remote-classification confidence, and supporting
 evidence. Manual corrections live as versioned overrides with an explanation.
 
+`data/overrides.json` holds those corrections, keyed by job `id`
+(`data/overrides.example.json` shows the shape). Each entry names an `action`,
+a human `reason`, and an `addedAt` date:
+
+- `drop` / `not_remote` removes a listing the classifier should not have kept.
+- `set_scope` pins `remoteType` to `value` and sets confidence to 1.0.
+
+`crawler.pipeline.apply_overrides` applies them during collection and stamps the
+surviving change onto the job as `correction`. The file is reviewed input, like
+the company registry, and its git history is the audit trail.
+
+Per-source health is published to `data/sources.json` each run: fetch count,
+visible remote count, average classification confidence, scope mix, last
+successful run, and any error. The `/sources` page renders it.
+
 ## Deployment target
 
 - Scheduled Python crawler on GitHub Actions

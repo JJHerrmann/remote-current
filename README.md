@@ -22,20 +22,30 @@ from employer career pages and public applicant-tracking-system job feeds.
 Company registry
       |
       v
-ATS collectors (Greenhouse, Lever, Ashby, Recruitee, SmartRecruiters)
+ATS collectors (Greenhouse, Lever, Ashby, Recruitee, SmartRecruiters,
+                Workday, Phenom, Microsoft Careers)
       |
       v
 Normalization -> remote classification -> stable IDs
       |
       v
-Versioned JSON dataset
+Versioned JSON dataset  +  RSS feeds  +  sources.json
+      |
+      v
+Deploy step prerenders the newest listings + JSON-LD into index.html
       |
       v
 Static filterable GitHub Pages board
 ```
 
 The crawler runs hourly through GitHub Actions and deploys the static site and
-dataset to GitHub Pages. Applications remain on the employer's own site. A
+dataset to GitHub Pages. Because the board is otherwise client-rendered, the
+`crawler.seo` step bakes the ~40 newest listings, an `ItemList`, and
+`Organization` / `WebSite` structured data into the served `index.html` so
+search engines index real job content. `robots.txt`, `sitemap.xml`, Open Graph
+and Twitter cards are in place; the canonical host is
+`https://jjherrmann.github.io/remote-current/` until a custom domain is set (a
+find-and-replace in the three HTML `<head>`s and `crawler/seo.py`). Applications remain on the employer's own site. A
 database, API, feeds, and alerts can be added once the collection quality is
 proven.
 
@@ -64,9 +74,12 @@ python -m crawler.run
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`. The committed registry currently covers 70
-employers across five ATS families. GitHub Actions refreshes the dataset hourly
-and deploys the static board to GitHub Pages.
+Then open `http://localhost:8000`. The committed registry covers roughly 105
+employers across the direct ATS boards (Greenhouse, Lever, Ashby, Recruitee,
+SmartRecruiters) plus Workday CxS, Phenom, Microsoft Careers, and a schema.org
+`JobPosting` fallback. `crawler/discover.py` grows the registry from public URL
+archives on a weekly schedule. GitHub Actions refreshes the dataset hourly and
+deploys the static board to GitHub Pages.
 
 The expanded seed set was adapted from the MIT-licensed
 [mherzog4/job-boards](https://github.com/mherzog4/job-boards) project, then

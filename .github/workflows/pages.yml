@@ -32,15 +32,19 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/jobs.json
+          git add data/jobs.json data/sources.json sitemap.xml
           git diff --cached --quiet || git commit -m "Refresh job dataset"
           git push
       - uses: actions/configure-pages@v5
       - name: Assemble static site
         run: |
           mkdir _site
-          cp index.html _site/
+          cp index.html sources.html about.html favicon.ico robots.txt sitemap.xml _site/
+          cp -r assets _site/
           cp -r data _site/
+          cp -r feeds _site/
+          cp -r deprecated _site/
+          python -m crawler.seo   # bake latest listings + ItemList into _site/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
