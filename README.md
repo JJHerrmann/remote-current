@@ -22,7 +22,7 @@ from employer career pages and public applicant-tracking-system job feeds.
 Company registry
       |
       v
-ATS collectors (Greenhouse, Lever, Ashby)
+ATS collectors (Greenhouse, Lever, Ashby, Recruitee, SmartRecruiters)
       |
       v
 Normalization -> remote classification -> stable IDs
@@ -41,7 +41,7 @@ proven.
 
 ## First milestone
 
-1. Normalize Greenhouse, Lever, and Ashby listings.
+1. Normalize Greenhouse, Lever, Ashby, Recruitee, and SmartRecruiters listings.
 2. Track first-seen and last-verified timestamps with stable job IDs.
 3. Classify remote scope and extract visible salary ranges.
 4. Publish a searchable, filterable static board.
@@ -64,9 +64,15 @@ python -m crawler.run
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`. The committed source registry currently
-exercises Greenhouse, Lever, and Ashby. GitHub Actions refreshes the dataset
-hourly and deploys the static board to GitHub Pages.
+Then open `http://localhost:8000`. The committed registry currently covers 70
+employers across five ATS families. GitHub Actions refreshes the dataset hourly
+and deploys the static board to GitHub Pages.
+
+The expanded seed set was adapted from the MIT-licensed
+[mherzog4/job-boards](https://github.com/mherzog4/job-boards) project, then
+live-validated by this crawler. See
+[docs/source-discovery.md](docs/source-discovery.md) for the free discovery
+model that grows coverage without depending on LinkedIn or Indeed.
 
 ## Status
 

@@ -1,5 +1,6 @@
 import unittest
-from crawler.pipeline import classify_remote, parse_salary, plain_text
+from unittest.mock import patch
+from crawler.pipeline import classify_remote, parse_salary, plain_text, recruitee, smartrecruiters
 
 class PipelineTests(unittest.TestCase):
     def test_plain_text_decodes_markup(self): self.assertEqual(plain_text("&lt;p&gt;Hello &amp; goodbye&lt;/p&gt;"), "Hello & goodbye")
@@ -14,5 +15,13 @@ class PipelineTests(unittest.TestCase):
     def test_hybrid_is_not_remote(self): self.assertEqual(classify_remote("London (Hybrid)", "")["type"], "hybrid")
     def test_null_workplace_type(self): self.assertEqual(classify_remote("Remote, US", "", True, None)["type"], "country_restricted")
     def test_salary_range(self): self.assertEqual((parse_salary("Salary $120,000–$150,000")["min"], parse_salary("Salary $120,000–$150,000")["max"]), (120000, 150000))
+    @patch("crawler.pipeline.fetch_json")
+    def test_recruitee_remote_country(self, fetch):
+        fetch.return_value={"offers":[{"slug":"writer","title":"Writer","location":"Remote job","country_code":"US","remote":True,"careers_url":"https://example.com/writer"}]}
+        self.assertEqual(recruitee({"name":"Example","type":"recruitee","key":"example"})[0]["remoteType"], "country_restricted")
+    @patch("crawler.pipeline.fetch_json")
+    def test_smartrecruiters_structured_remote(self, fetch):
+        fetch.return_value={"content":[{"id":"1","name":"Engineer","releasedDate":"2026-01-01T00:00:00Z","location":{"fullLocation":"Germany, REMOTE","remote":True,"hybrid":False}}],"totalFound":1}
+        self.assertEqual(smartrecruiters({"name":"Example","type":"smartrecruiters","key":"Example"})[0]["remoteType"], "country_restricted")
 
 if __name__ == "__main__": unittest.main()

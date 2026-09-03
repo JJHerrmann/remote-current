@@ -93,7 +93,7 @@ def parse_salary(text: str) -> dict[str, Any]:
 def normalize(company: dict[str, str], source_id: Any, title: str, location: str, description: str, url: str, posted_at: str | None, department: str | None, employment_type: str | None, structured_remote: bool, workplace_type: str) -> dict[str, Any]:
     remote, salary = classify_remote(location, description, structured_remote, workplace_type), parse_salary(description)
     stable = f"{company['type']}:{company['key']}:{source_id}"
-    return {"id": hashlib.sha256(stable.encode()).hexdigest()[:20], "sourceId": str(source_id), "source": company["type"], "company": company["name"], "title": re.sub(r"\s+", " ", title).strip(), "location": re.sub(r"\s+", " ", location).strip() or "Not specified", "department": department, "employmentType": employment_type, "description": description[:5000], "url": url, "postedAt": posted_at, "remoteType": remote["type"], "remoteConfidence": remote["confidence"], "remoteEvidence": remote["evidence"], "salaryMin": salary["min"], "salaryMax": salary["max"], "salaryCurrency": salary["currency"], "salaryText": salary["text"]}
+    return {"id": hashlib.sha256(stable.encode()).hexdigest()[:20], "sourceId": str(source_id), "source": company["type"], "company": company["name"], "title": re.sub(r"\s+", " ", title).strip(), "location": re.sub(r"\s+", " ", location).strip() or "Not specified", "department": department, "employmentType": employment_type, "url": url, "postedAt": posted_at, "remoteType": remote["type"], "remoteConfidence": remote["confidence"], "remoteEvidence": remote["evidence"], "salaryMin": salary["min"], "salaryMax": salary["max"], "salaryCurrency": salary["currency"], "salaryText": salary["text"]}
 
 
 def greenhouse(company: dict[str, str]) -> list[dict[str, Any]]:
@@ -125,7 +125,36 @@ def ashby(company: dict[str, str]) -> list[dict[str, Any]]:
     return jobs
 
 
-ADAPTERS = {"greenhouse": greenhouse, "lever": lever, "ashby": ashby}
+def recruitee(company: dict[str, str]) -> list[dict[str, Any]]:
+    payload = fetch_json(f"https://{company['key']}.recruitee.com/api/offers/")
+    jobs = []
+    for item in payload.get("offers", []):
+        remote = bool(item.get("remote"))
+        country = (item.get("country_code") or "").upper()
+        location = f"Remote, {country}" if remote and country else item.get("location", "")
+        published = (item.get("published_at") or item.get("created_at") or "").replace(" UTC", "+00:00") or None
+        jobs.append(normalize(company, item.get("slug"), item.get("title", ""), location, "", item.get("careers_url") or item.get("careers_apply_url", ""), published, item.get("category_code"), item.get("employment_type_code"), remote, "remote" if remote else ""))
+    return jobs
+
+
+def smartrecruiters(company: dict[str, str]) -> list[dict[str, Any]]:
+    items, offset, limit = [], 0, 100
+    while True:
+        payload = fetch_json(f"https://api.smartrecruiters.com/v1/companies/{company['key']}/postings?limit={limit}&offset={offset}")
+        batch = payload.get("content", [])
+        items.extend(batch)
+        offset += len(batch)
+        if not batch or offset >= payload.get("totalFound", 0):
+            break
+    jobs = []
+    for item in items:
+        location = item.get("location") or {}
+        remote, hybrid = bool(location.get("remote")), bool(location.get("hybrid"))
+        jobs.append(normalize(company, item.get("id"), item.get("name", ""), location.get("fullLocation", ""), "", f"https://jobs.smartrecruiters.com/{company['key']}/{item.get('id')}", item.get("releasedDate"), (item.get("department") or {}).get("label"), (item.get("typeOfEmployment") or {}).get("label"), remote, "hybrid" if hybrid else ("remote" if remote else "")))
+    return jobs
+
+
+ADAPTERS = {"greenhouse": greenhouse, "lever": lever, "ashby": ashby, "recruitee": recruitee, "smartrecruiters": smartrecruiters}
 
 
 def collect(companies: list[dict[str, str]], previous: list[dict[str, Any]] | None = None) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
