@@ -68,5 +68,49 @@
   {"name":"Visa","type":"smartrecruiters","key":"Visa"},
   {"name":"ServiceNow","type":"smartrecruiters","key":"ServiceNow"},
   {"name":"Ubisoft","type":"smartrecruiters","key":"Ubisoft"},
-  {"name":"Experian","type":"smartrecruiters","key":"Experian"}
+  {"name":"Experian","type":"smartrecruiters","key":"Experian"},
+
+  {"name":"xAI","type":"greenhouse","key":"xai"},
+
+  {"name":"The Coca-Cola Company","type":"workday","key":"coke","host":"coke.wd1.myworkdayjobs.com","tenant":"coke","site":"coca-cola-careers"},
+  {"name":"NVIDIA","type":"workday","key":"nvidia","host":"nvidia.wd5.myworkdayjobs.com","tenant":"nvidia","site":"NVIDIAExternalCareerSite"},
+  {"name":"Salesforce","type":"workday","key":"salesforce","host":"salesforce.wd12.myworkdayjobs.com","tenant":"salesforce","site":"External_Career_Site"},
+  {"name":"Adobe","type":"workday","key":"adobe","host":"adobe.wd5.myworkdayjobs.com","tenant":"adobe","site":"external_experienced"},
+  {"name":"Target","type":"workday","key":"target","host":"target.wd5.myworkdayjobs.com","tenant":"target","site":"targetcareers"},
+  {"name":"Sony","type":"workday","key":"sonyglobal","host":"sonyglobal.wd1.myworkdayjobs.com","tenant":"sonyglobal","site":"SonyGlobalCareers"},
+  {"name":"HP","type":"workday","key":"hp","host":"hp.wd5.myworkdayjobs.com","tenant":"hp","site":"ExternalCareerSite"},
+  {"name":"Autodesk","type":"workday","key":"autodesk","host":"autodesk.wd1.myworkdayjobs.com","tenant":"autodesk","site":"Ext"},
+  {"name":"Workday","type":"workday","key":"workday","host":"workday.wd5.myworkdayjobs.com","tenant":"workday","site":"Workday"},
+  {"name":"Zoom","type":"workday","key":"zoom","host":"zoom.wd5.myworkdayjobs.com","tenant":"zoom","site":"Zoom"},
+  {"name":"PayPal","type":"workday","key":"paypal","host":"paypal.wd1.myworkdayjobs.com","tenant":"paypal","site":"jobs"},
+
+  {"name":"McDonald's","type":"successfactors","key":"mcdonalds","enabled":false,"notes":"jobs.mcdonalds.com runs on SAP SuccessFactors, not Workday. Needs a successfactors adapter (career-site OData API)."},
+  {"name":"Yum! Brands","type":"jsonld","key":"yum","url":"","enabled":false,"notes":"jobs.yum.com ATS not identified from static HTML (likely SPA). Candidate for the sitemap + JSON-LD path."},
+
+  {"name":"PepsiCo","type":"phenom","key":"pepsico","host":"www.pepsicojobs.com"},
+
+  {"name":"Microsoft","type":"microsoft","key":"microsoft"},
+
+  {"name":"Zapier","type":"ashby","key":"zapier"},
+  {"name":"Buffer","type":"ashby","key":"buffer"},
+  {"name":"Sentry","type":"ashby","key":"sentry"},
+  {"name":"1Password","type":"ashby","key":"1password"},
+  {"name":"Docker","type":"ashby","key":"docker"},
+  {"name":"ClickHouse","type":"ashby","key":"clickhouse"},
+  {"name":"Astronomer","type":"ashby","key":"astronomer"},
+  {"name":"Grafana Labs","type":"greenhouse","key":"grafanalabs"},
+  {"name":"Ghost","type":"greenhouse","key":"ghost"},
+  {"name":"Remote","type":"greenhouse","key":"remotecom"},
+  {"name":"Elastic","type":"greenhouse","key":"elastic"},
+  {"name":"Mattermost","type":"greenhouse","key":"mattermost"},
+  {"name":"Webflow","type":"greenhouse","key":"webflow"},
+  {"name":"Wikimedia Foundation","type":"greenhouse","key":"wikimedia"},
+  {"name":"Mozilla","type":"greenhouse","key":"mozilla"},
+  {"name":"CircleCI","type":"greenhouse","key":"circleci"},
+  {"name":"Twilio","type":"greenhouse","key":"twilio"},
+  {"name":"Reddit","type":"greenhouse","key":"reddit"},
+  {"name":"Brave","type":"greenhouse","key":"brave"},
+  {"name":"Prisma","type":"greenhouse","key":"prisma"},
+  {"name":"Scale AI","type":"greenhouse","key":"scaleai"},
+  {"name":"Netlify","type":"greenhouse","key":"netlify"}
 ]

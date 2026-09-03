@@ -30,10 +30,20 @@ def plain_text(value: str | None) -> str:
     return re.sub(r"\s+", " ", " ".join(parser.parts)).strip()
 
 
-def fetch_json(url: str) -> Any:
-    request = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": USER_AGENT})
+def fetch_json(url: str, data: dict | None = None) -> Any:
+    body = json.dumps(data).encode() if data is not None else None
+    headers = {"Accept": "application/json", "User-Agent": USER_AGENT}
+    if body is not None:
+        headers["Content-Type"] = "application/json"
+    request = urllib.request.Request(url, data=body, headers=headers)
     with urllib.request.urlopen(request, timeout=45) as response:
         return json.load(response)
+
+
+def fetch_text(url: str) -> str:
+    request = urllib.request.Request(url, headers={"Accept": "text/html,application/xhtml+xml", "User-Agent": USER_AGENT})
+    with urllib.request.urlopen(request, timeout=45) as response:
+        return response.read().decode(response.headers.get_content_charset() or "utf-8", "replace")
 
 
 def iso_from_epoch_ms(value: int | None) -> str | None:
@@ -90,10 +100,42 @@ def parse_salary(text: str) -> dict[str, Any]:
     return {"min": amount(match["low"]), "max": amount(match["high"]), "currency": {"$": "USD", "£": "GBP", "€": "EUR"}[match["currency"]], "text": match.group(0)}
 
 
-def normalize(company: dict[str, str], source_id: Any, title: str, location: str, description: str, url: str, posted_at: str | None, department: str | None, employment_type: str | None, structured_remote: bool, workplace_type: str) -> dict[str, Any]:
+def classify_experience(title: str, structured: str | None = None) -> str:
+    known = (structured or "").casefold().replace("-", "_").replace(" ", "_")
+    structured_map = {"internship": "internship", "entry_level": "entry", "associate": "entry", "mid_senior_level": "mid", "mid_level": "mid", "director": "director", "executive": "executive"}
+    if known in structured_map:
+        return structured_map[known]
+    value = title.casefold()
+    rules = [
+        ("internship", r"\b(intern|internship|apprentice)\b"),
+        ("entry", r"\b(junior|entry[- ]level|new grad|graduate)\b"),
+        ("executive", r"\b(chief .+ officer|vice president|[se]?vp)\b"),
+        ("director", r"\b(director|head of)\b"),
+        ("manager", r"\bmanager\b"),
+        ("lead", r"\b(principal|staff|lead)\b"),
+        ("senior", r"\b(senior|sr\.?)\b"),
+        ("mid", r"\b(mid[- ]level|intermediate)\b"),
+    ]
+    return next((level for level, pattern in rules if re.search(pattern, value)), "unspecified")
+
+
+def classify_employment(value: str | None) -> str:
+    text = (value or "").casefold()
+    if "intern" in text:
+        return "internship"
+    if "part" in text:
+        return "part_time"
+    if any(word in text for word in ("contract", "freelance", "temporary")):
+        return "contract"
+    if "full" in text or "permanent" in text:
+        return "full_time"
+    return "unspecified"
+
+
+def normalize(company: dict[str, str], source_id: Any, title: str, location: str, description: str, url: str, posted_at: str | None, department: str | None, employment_type: str | None, structured_remote: bool, workplace_type: str, structured_experience: str | None = None) -> dict[str, Any]:
     remote, salary = classify_remote(location, description, structured_remote, workplace_type), parse_salary(description)
     stable = f"{company['type']}:{company['key']}:{source_id}"
-    return {"id": hashlib.sha256(stable.encode()).hexdigest()[:20], "sourceId": str(source_id), "source": company["type"], "company": company["name"], "title": re.sub(r"\s+", " ", title).strip(), "location": re.sub(r"\s+", " ", location).strip() or "Not specified", "department": department, "employmentType": employment_type, "url": url, "postedAt": posted_at, "remoteType": remote["type"], "remoteConfidence": remote["confidence"], "remoteEvidence": remote["evidence"], "salaryMin": salary["min"], "salaryMax": salary["max"], "salaryCurrency": salary["currency"], "salaryText": salary["text"]}
+    return {"id": hashlib.sha256(stable.encode()).hexdigest()[:20], "sourceId": str(source_id), "source": company["type"], "company": company["name"], "title": re.sub(r"\s+", " ", title).strip(), "location": re.sub(r"\s+", " ", location).strip() or "Not specified", "department": department, "employmentType": employment_type, "employmentCategory": classify_employment(employment_type), "experienceLevel": classify_experience(title, structured_experience), "experienceInferred": not bool(structured_experience), "url": url, "postedAt": posted_at, "remoteType": remote["type"], "remoteConfidence": remote["confidence"], "remoteEvidence": remote["evidence"], "salaryMin": salary["min"], "salaryMax": salary["max"], "salaryCurrency": salary["currency"], "salaryText": salary["text"]}
 
 
 def greenhouse(company: dict[str, str]) -> list[dict[str, Any]]:
@@ -150,32 +192,241 @@ def smartrecruiters(company: dict[str, str]) -> list[dict[str, Any]]:
     for item in items:
         location = item.get("location") or {}
         remote, hybrid = bool(location.get("remote")), bool(location.get("hybrid"))
-        jobs.append(normalize(company, item.get("id"), item.get("name", ""), location.get("fullLocation", ""), "", f"https://jobs.smartrecruiters.com/{company['key']}/{item.get('id')}", item.get("releasedDate"), (item.get("department") or {}).get("label"), (item.get("typeOfEmployment") or {}).get("label"), remote, "hybrid" if hybrid else ("remote" if remote else "")))
+        jobs.append(normalize(company, item.get("id"), item.get("name", ""), location.get("fullLocation", ""), "", f"https://jobs.smartrecruiters.com/{company['key']}/{item.get('id')}", item.get("releasedDate"), (item.get("department") or {}).get("label"), (item.get("typeOfEmployment") or {}).get("label"), remote, "hybrid" if hybrid else ("remote" if remote else ""), (item.get("experienceLevel") or {}).get("id")))
     return jobs
 
 
-ADAPTERS = {"greenhouse": greenhouse, "lever": lever, "ashby": ashby, "recruitee": recruitee, "smartrecruiters": smartrecruiters}
+WORKDAY_LIST_CAP = 400   # postings scanned per tenant before paging stops
+WORKDAY_DETAIL_CAP = 120  # detail requests per tenant per crawl
 
 
-def collect(companies: list[dict[str, str]], previous: list[dict[str, Any]] | None = None) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
-    now, old, gathered, errors = datetime.now(timezone.utc).replace(microsecond=0).isoformat(), {job["id"]: job for job in (previous or [])}, [], []
+def _workday_detail(company: dict[str, str], base: str, posting: dict[str, Any]) -> dict[str, Any] | None:
+    try:
+        info = fetch_json(f"{base}{posting['externalPath']}").get("jobPostingInfo") or {}
+    except Exception:
+        return None
+    if not info:
+        return None
+    location = " / ".join(filter(None, [info.get("location", ""), *info.get("additionalLocations", [])]))
+    start = info.get("startDate")
+    source_id = info.get("jobReqId") or info.get("jobPostingId") or (posting.get("bulletFields") or [posting.get("externalPath")])[0]
+    return normalize(company, source_id, info.get("title") or posting.get("title", ""), location, plain_text(info.get("jobDescription")), info.get("externalUrl", ""), f"{start}T00:00:00+00:00" if start else None, None, info.get("timeType"), False, "")
+
+
+def workday(company: dict[str, str]) -> list[dict[str, Any]]:
+    # Workday CxS: a POST search endpoint plus one detail GET per posting. The
+    # list rows carry no description or real date, so classification needs the
+    # detail call; searchText="remote" and the caps keep an hourly crawl bounded.
+    base = f"https://{company['host']}/wday/cxs/{company['tenant']}/{company['site']}"
+    postings, offset = [], 0
+    while offset < WORKDAY_LIST_CAP:
+        payload = fetch_json(f"{base}/jobs", {"limit": 20, "offset": offset, "searchText": "remote", "appliedFacets": {}})
+        batch = payload.get("jobPostings", [])
+        postings.extend(batch)
+        offset += len(batch)
+        if not batch or offset >= payload.get("total", 0):
+            break
+    hinted = [p for p in postings if re.search(r"remote", f"{p.get('title', '')} {p.get('locationsText', '')} {p.get('externalPath', '')}", re.I)]
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        detailed = list(pool.map(lambda p: _workday_detail(company, base, p), hinted[:WORKDAY_DETAIL_CAP]))
+    return [job for job in detailed if job]
+
+
+PHENOM_PAGE_CAP = 20
+
+
+def phenom(company: dict[str, str]) -> list[dict[str, Any]]:
+    # Phenom career sites (PepsiCo and many large employers) expose a paged JSON
+    # feed with the description inline. There is no structured remote flag, so
+    # keywords=remote narrows a mostly-onsite feed and classify_remote decides
+    # from the location and description text.
+    rows, page = [], 1
+    while page <= PHENOM_PAGE_CAP:
+        payload = fetch_json(f"https://{company['host']}/api/jobs?page={page}&limit=100&keywords=remote")
+        batch = payload.get("jobs", [])
+        rows.extend(item.get("data") or item for item in batch)
+        page += 1
+        if not batch or len(rows) >= payload.get("totalCount", 0):
+            break
+    jobs = []
+    for data in rows:
+        category = (data.get("category") or [None])[0]
+        posted = (data.get("posted_date") or data.get("create_date") or "").replace("+0000", "+00:00") or None
+        jobs.append(normalize(company, data.get("req_id"), data.get("title", ""), data.get("full_location") or data.get("location_name", ""), data.get("description") or "", data.get("apply_url", ""), posted, category.strip() if isinstance(category, str) else None, None, False, ""))
+    return jobs
+
+
+MICROSOFT_CAP = 200
+
+
+def microsoft(company: dict[str, str]) -> list[dict[str, Any]]:
+    # careers.microsoft.com public search. Field names follow the documented
+    # response shape but were not exercised against the live host here; a schema
+    # drift surfaces as a per-source error rather than failing the crawl.
+    base = "https://gcsservices.careers.microsoft.com/search/api/v1"
+    results, page = [], 1
+    while len(results) < MICROSOFT_CAP:
+        result = (fetch_json(f"{base}/search?q=&l=en_us&pg={page}&pgSz=20&o=Recent&flt=true").get("operationResult") or {}).get("result") or {}
+        batch = result.get("jobs", [])
+        results.extend(batch)
+        page += 1
+        if not batch or len(results) >= result.get("totalJobs", 0):
+            break
+    jobs = []
+    for item in results:
+        props = item.get("properties") or {}
+        locations = props.get("locations") or ([props["location"]] if props.get("location") else [])
+        flex = (props.get("workSiteFlexibility") or "").casefold()
+        job_id = item.get("jobId") or item.get("id")
+        jobs.append(normalize(company, job_id, item.get("title", ""), props.get("primaryLocation") or ", ".join(locations), "", f"https://jobs.careers.microsoft.com/global/en/job/{job_id}", item.get("postingDate") or props.get("postingDate"), props.get("profession") or props.get("discipline"), props.get("employmentType"), "100%" in flex or "work from home" in flex, ""))
+    return jobs
+
+
+_LDJSON = re.compile(r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>', re.S | re.I)
+
+
+def _iter_jobpostings(node: Any):
+    if isinstance(node, list):
+        for item in node:
+            yield from _iter_jobpostings(item)
+    elif isinstance(node, dict):
+        kinds = node.get("@type")
+        if "JobPosting" in (kinds if isinstance(kinds, list) else [kinds]):
+            yield node
+        for key in ("@graph", "itemListElement", "item", "mainEntity"):
+            if key in node:
+                yield from _iter_jobpostings(node[key])
+
+
+def _ld_location(posting: dict[str, Any]) -> tuple[str, bool]:
+    remote = str(posting.get("jobLocationType", "")).upper() == "TELECOMMUTE" or bool(posting.get("applicantLocationRequirements"))
+    names: list[str] = []
+    reqs = posting.get("applicantLocationRequirements")
+    for req in (reqs if isinstance(reqs, list) else [reqs] if reqs else []):
+        if isinstance(req, dict) and req.get("name"):
+            names.append(str(req["name"]))
+    locs = posting.get("jobLocation")
+    for loc in (locs if isinstance(locs, list) else [locs] if locs else []):
+        addr = loc.get("address") if isinstance(loc, dict) else loc
+        if isinstance(addr, dict):
+            names.append(", ".join(str(addr[k]) for k in ("addressLocality", "addressRegion", "addressCountry") if isinstance(addr.get(k), str)))
+        elif isinstance(addr, str):
+            names.append(addr)
+    location = "; ".join(name for name in names if name)
+    if remote and "remote" not in location.lower():
+        location = f"Remote{f' — {location}' if location else ''}"
+    return location, remote
+
+
+_CURRENCY_SYMBOL = {"USD": "$", "GBP": "£", "EUR": "€"}
+
+
+def _ld_salary(posting: dict[str, Any]) -> str:
+    base = posting.get("baseSalary")
+    if not isinstance(base, dict):
+        return ""
+    symbol = _CURRENCY_SYMBOL.get(str(base.get("currency") or base.get("currencyCode") or "").upper())
+    if not symbol:
+        return ""
+    value = base.get("value")
+    try:
+        if isinstance(value, dict):
+            low, high = value.get("minValue"), value.get("maxValue")
+            if low and high:
+                return f"{symbol}{int(float(low)):,} - {symbol}{int(float(high)):,}"
+            value = value.get("value")
+        return f"{symbol}{int(float(value)):,}" if value else ""
+    except (TypeError, ValueError):
+        return ""
+
+
+def jsonld(company: dict[str, str]) -> list[dict[str, Any]]:
+    # Standards-based fallback for careers pages on no known ATS: parse any
+    # server-rendered schema.org JobPosting blocks. Single-page apps that inject
+    # JSON-LD client-side yield nothing here; those need the sitemap path.
+    document = fetch_text(company["url"])
+    seen: set[str] = set()
+    jobs = []
+    for block in _LDJSON.findall(document):
+        try:
+            data = json.loads(block.strip())
+        except ValueError:
+            continue
+        for posting in _iter_jobpostings(data):
+            url = posting.get("url") or posting.get("@id") or company["url"]
+            identifier = posting.get("identifier")
+            if isinstance(identifier, dict):
+                identifier = identifier.get("value")
+            source_id = str(identifier or url)
+            if source_id in seen:
+                continue
+            seen.add(source_id)
+            location, remote = _ld_location(posting)
+            description = f"{_ld_salary(posting)} {plain_text(posting.get('description'))}".strip()
+            jobs.append(normalize(company, source_id, posting.get("title", ""), location, description, url, posting.get("datePosted"), None, posting.get("employmentType"), remote, ""))
+    return jobs
+
+
+ADAPTERS = {"greenhouse": greenhouse, "lever": lever, "ashby": ashby, "recruitee": recruitee, "smartrecruiters": smartrecruiters, "workday": workday, "phenom": phenom, "microsoft": microsoft, "jsonld": jsonld}
+
+
+DROPPED_SCOPES = {"not_remote", "hybrid"}
+
+
+def apply_overrides(jobs: list[dict[str, Any]], overrides: list[dict[str, Any]] | None) -> list[dict[str, Any]]:
+    """Manual corrections keyed by job id. `drop` removes a misclassified listing;
+    `set_scope` pins its remote scope. Each surviving change is recorded on the job."""
+    index = {entry["id"]: entry for entry in (overrides or []) if entry.get("id")}
+    kept = []
+    for job in jobs:
+        entry = index.get(job["id"])
+        if not entry:
+            kept.append(job)
+            continue
+        action = entry.get("action")
+        if action in {"drop", "not_remote"}:
+            continue
+        if action == "set_scope" and entry.get("value"):
+            job["remoteType"] = entry["value"]
+            job["remoteConfidence"] = 1.0
+            job["remoteEvidence"] = f"Manual correction: {entry.get('reason', '').rstrip('.')}".strip().rstrip(":")
+        job["correction"] = {"reason": entry.get("reason", ""), "addedAt": entry.get("addedAt", "")}
+        kept.append(job)
+    return kept
+
+
+def collect(companies: list[dict[str, str]], previous: list[dict[str, Any]] | None = None, overrides: list[dict[str, Any]] | None = None) -> tuple[list[dict[str, Any]], list[dict[str, str]], list[dict[str, Any]]]:
+    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    old = {job["id"]: job for job in (previous or [])}
+    gathered, errors, reports = [], [], []
     with ThreadPoolExecutor(max_workers=min(6, len(companies))) as pool:
         futures = {pool.submit(ADAPTERS[c["type"]], c): c for c in companies}
         for future in as_completed(futures):
             company = futures[future]
+            report = {"name": company["name"], "type": company["type"], "ok": True, "error": None, "fetched": 0, "visible": 0, "avgConfidence": None, "scopes": {}}
             try:
-                gathered.extend(future.result())
+                rows = future.result()
+                keep = [job for job in rows if job["remoteType"] not in DROPPED_SCOPES]
+                report["fetched"], report["visible"] = len(rows), len(keep)
+                if keep:
+                    report["avgConfidence"] = round(sum(job["remoteConfidence"] for job in keep) / len(keep), 3)
+                    for job in keep:
+                        report["scopes"][job["remoteType"]] = report["scopes"].get(job["remoteType"], 0) + 1
+                gathered.extend(rows)
             except Exception as exc:
+                report["ok"], report["error"] = False, str(exc)
                 errors.append({"company": company["name"], "error": str(exc)})
+            reports.append(report)
     visible = []
-    for job in gathered:
-        if job["remoteType"] in {"not_remote", "hybrid"}:
+    for job in apply_overrides(gathered, overrides):
+        if job["remoteType"] in DROPPED_SCOPES:
             continue
         job["firstSeenAt"] = old.get(job["id"], {}).get("firstSeenAt", now)
         job["lastSeenAt"] = now
         visible.append(job)
     visible.sort(key=lambda job: job.get("postedAt") or job["firstSeenAt"], reverse=True)
-    return visible, errors
+    reports.sort(key=lambda report: (report["ok"], -report["visible"], report["name"].casefold()))
+    return visible, errors, reports
 
 
 def write_dataset(root: Path, jobs: list[dict[str, Any]], errors: list[dict[str, str]]) -> None:
@@ -183,3 +434,15 @@ def write_dataset(root: Path, jobs: list[dict[str, Any]], errors: list[dict[str,
     data_dir.mkdir(exist_ok=True)
     document = {"generatedAt": datetime.now(timezone.utc).replace(microsecond=0).isoformat(), "jobCount": len(jobs), "companyCount": len({job["company"] for job in jobs}), "sourceErrors": errors, "jobs": jobs}
     (data_dir / "jobs.json").write_text(json.dumps(document, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+
+def write_sources(root: Path, reports: list[dict[str, Any]], previous: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    data_dir = root / "data"
+    data_dir.mkdir(exist_ok=True)
+    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    last_ok = {entry["name"]: entry.get("lastOkAt") for entry in (previous or [])}
+    for report in reports:
+        report["lastOkAt"] = generated_at if report["ok"] else last_ok.get(report["name"])
+    document = {"generatedAt": generated_at, "sourceCount": len(reports), "okCount": sum(1 for r in reports if r["ok"]), "errorCount": sum(1 for r in reports if not r["ok"]), "jobCount": sum(r["visible"] for r in reports), "sources": reports}
+    (data_dir / "sources.json").write_text(json.dumps(document, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    return document

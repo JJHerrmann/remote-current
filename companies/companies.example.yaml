@@ -1,10 +1,26 @@
-- slug: example
-  name: Example Company
-  website_url: https://example.com
-  careers_url: https://example.com/careers
-  source:
-    type: greenhouse
-    key: example
-  enabled: true
-  refresh_minutes: 60
-  notes: Example only; do not ingest.
+# Reference for companies.json entry shapes. The crawler loads companies.json
+# (a flat JSON array); this file documents the fields each source type needs.
+# Optional: "enabled": false skips an entry, "notes" is a free-text reminder.
+
+# Direct ATS boards - one slug identifies the board.
+- { name: Example Co, type: greenhouse, key: exampleco }
+- { name: Example Co, type: lever, key: exampleco }
+- { name: Example Co, type: ashby, key: exampleco }
+- { name: Example Co, type: recruitee, key: exampleco }        # {key}.recruitee.com
+- { name: Example Co, type: smartrecruiters, key: ExampleCo }  # case-sensitive
+
+# Workday CxS - key is any stable slug; host/tenant/site come from the careers
+# URL https://{host}/{locale}/{site}. Verify with a POST to
+# https://{host}/wday/cxs/{tenant}/{site}/jobs before enabling.
+- name: Example Co
+  type: workday
+  key: exampleco
+  host: exampleco.wd1.myworkdayjobs.com
+  tenant: exampleco
+  site: External_Career_Site
+
+# Phenom career site - host only.
+- { name: Example Co, type: phenom, key: exampleco, host: www.examplecojobs.com }
+
+# Microsoft Careers - fixed host, no parameters.
+- { name: Microsoft, type: microsoft, key: microsoft }
