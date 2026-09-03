@@ -1,0 +1,9 @@
+[
+  {"name":"GitLab","type":"greenhouse","key":"gitlab","careers_url":"https://about.gitlab.com/jobs/"},
+  {"name":"Cloudflare","type":"greenhouse","key":"cloudflare","careers_url":"https://www.cloudflare.com/careers/jobs/"},
+  {"name":"Canonical","type":"greenhouse","key":"canonical","careers_url":"https://canonical.com/careers"},
+  {"name":"Spotify","type":"lever","key":"spotify","careers_url":"https://www.lifeatspotify.com/jobs"},
+  {"name":"Linear","type":"ashby","key":"linear","careers_url":"https://linear.app/careers"},
+  {"name":"Notion","type":"ashby","key":"notion","careers_url":"https://www.notion.so/careers"},
+  {"name":"Supabase","type":"ashby","key":"supabase","careers_url":"https://supabase.com/careers"}
+]

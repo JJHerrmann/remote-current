@@ -16,7 +16,7 @@ from employer career pages and public applicant-tracking-system job feeds.
 - Deterministic parsers come first; AI is reserved for ambiguous text.
 - Collection methods and corrections remain inspectable.
 
-## Initial architecture
+## Current architecture
 
 ```text
 Company registry
@@ -25,29 +25,27 @@ Company registry
 ATS collectors (Greenhouse, Lever, Ashby)
       |
       v
-Normalization -> remote classification -> deduplication
+Normalization -> remote classification -> stable IDs
       |
       v
-SQLite locally / Cloudflare D1 in production
+Versioned JSON dataset
       |
-      +-- Search API
-      +-- Public web interface
-      +-- RSS feeds
-      +-- Optional email digests
+      v
+Static filterable GitHub Pages board
 ```
 
-The crawler will run on a schedule through GitHub Actions. The public site and
-API are intended for Cloudflare Workers, static assets, and D1. Applications
-remain on the employer's own site.
+The crawler runs hourly through GitHub Actions and deploys the static site and
+dataset to GitHub Pages. Applications remain on the employer's own site. A
+database, API, feeds, and alerts can be added once the collection quality is
+proven.
 
-## Planned first milestone
+## First milestone
 
-1. Define the normalized job schema and SQLite migrations.
-2. Implement Greenhouse, Lever, and Ashby collectors.
-3. Seed 50 reviewed remote-friendly employers.
-4. Track first seen, last seen, and closure state.
-5. Add deterministic remote-scope and salary parsing.
-6. Serve a searchable local prototype.
+1. Normalize Greenhouse, Lever, and Ashby listings.
+2. Track first-seen and last-verified timestamps with stable job IDs.
+3. Classify remote scope and extract visible salary ranges.
+4. Publish a searchable, filterable static board.
+5. Grow the reviewed employer registry and measure classifier accuracy.
 
 See [docs/architecture.md](docs/architecture.md) for the working technical
 plan and [companies/companies.example.yaml](companies/companies.example.yaml)
@@ -58,10 +56,22 @@ for the proposed source registry format.
 RemoteCurrent will be free to browse. Voluntary support may be accepted through
 Ko-fi to help cover the domain, hosting, email, and classification costs.
 
+## Run locally
+
+```bash
+python -m unittest discover -s tests
+python -m crawler.run
+python -m http.server 8000
+```
+
+Then open `http://localhost:8000`. The committed source registry currently
+exercises Greenhouse, Lever, and Ashby. GitHub Actions refreshes the dataset
+hourly and deploys the static board to GitHub Pages.
+
 ## Status
 
-Pre-alpha. The repository currently captures the project charter and intended
-architecture; collection code has not been implemented yet.
+Pre-alpha. The first end-to-end board is live; source coverage and filter
+accuracy are deliberately small enough to inspect while the parsers mature.
 
 ## License
 

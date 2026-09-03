@@ -1,0 +1,1 @@
+"""RemoteCurrent collection pipeline."""
