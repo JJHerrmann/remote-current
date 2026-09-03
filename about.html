@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="What RemoteCurrent is, who runs it, what it costs, and how it stays free: an open, donation-supported index of remote jobs read straight from employer feeds.">
+<title>About RemoteCurrent</title>
+<link rel="canonical" href="https://jjherrmann.github.io/remote-current/about.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Orpheus Rook">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RemoteCurrent">
+<meta property="og:title" content="About RemoteCurrent">
+<meta property="og:description" content="Who runs RemoteCurrent, what it costs, and the pledge that keeps it free: an open, donation-supported index of remote jobs read straight from employer feeds.">
+<meta property="og:url" content="https://jjherrmann.github.io/remote-current/about.html">
+<meta property="og:image" content="https://jjherrmann.github.io/remote-current/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jjherrmann.github.io/remote-current/assets/og-image.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#1b1e20">
+<link rel="alternate" type="application/rss+xml" title="RemoteCurrent — all remote jobs" href="feeds/all.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#e4e7e8; --panel:#f4f5f5; --raise:#fbfbfc;
+    --ink:#1b1e20; --muted:#5b6469; --faint:#8a9296;
+    --line:#c9cdce; --line-strong:#b2b8b9;
+    --signal:#a94e18; --signal-ink:#a94e18;
+    --ok:#1c7358;
+    --readout-bg:#1b1e20; --readout-ink:#d9dcd7; --readout-muted:#8c948f; --readout-line:#33383a;
+    --sans:'IBM Plex Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --cond:'IBM Plex Sans Condensed','IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono','Roboto Mono',Menlo,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#131619; --panel:#1b1f22; --raise:#20262b;
+      --ink:#e9e6de; --muted:#8b9298; --faint:#697076;
+      --line:#2d3339; --line-strong:#3b434b;
+      --signal:#e2812f; --signal-ink:#e88f42; --ok:#4cbda0;
+      --readout-bg:#0d1012; --readout-ink:#d5d8d3; --readout-muted:#79817d; --readout-line:#242a2c;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#131619; --panel:#1b1f22; --raise:#20262b;
+    --ink:#e9e6de; --muted:#8b9298; --faint:#697076;
+    --line:#2d3339; --line-strong:#3b434b;
+    --signal:#e2812f; --signal-ink:#e88f42; --ok:#4cbda0;
+    --readout-bg:#0d1012; --readout-ink:#d5d8d3; --readout-muted:#79817d; --readout-line:#242a2c;
+    color-scheme:dark;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink); font:400 16px/1.62 var(--sans); -webkit-font-smoothing:antialiased}
+  a{color:var(--signal-ink); text-decoration:underline; text-underline-offset:2px}
+  a:hover{text-decoration:none}
+  :focus-visible{outline:2px solid var(--signal); outline-offset:2px; border-radius:2px}
+  .wrap{width:min(1120px,100% - 40px); margin-inline:auto}
+
+  .readout{background:var(--readout-bg); color:var(--readout-ink); border-bottom:1px solid var(--readout-line)}
+  .readout .wrap{padding:9px 0; font:500 11.5px/1.4 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--readout-muted)}
+
+  .mast{border-bottom:1px solid var(--line)}
+  .mast .wrap{display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:20px 0}
+  .wordmark{display:inline-flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--ink); font:700 18px/1 var(--cond); letter-spacing:.16em; text-transform:uppercase}
+  .wordmark .logo{height:22px; width:auto; display:block; align-self:center}
+  .wordmark .logo.dark{display:none}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wordmark .logo.light{display:none} :root:not([data-theme="light"]) .wordmark .logo.dark{display:block}}
+  :root[data-theme="dark"] .wordmark .logo.light{display:none}
+  :root[data-theme="dark"] .wordmark .logo.dark{display:block}
+  :root[data-theme="light"] .wordmark .logo.light{display:block}
+  :root[data-theme="light"] .wordmark .logo.dark{display:none}
+  .wordmark span{color:var(--muted); font-weight:500}
+  .back{font:600 12px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase; text-decoration:none; color:var(--ink); padding:9px 14px; border:1px solid var(--line-strong); border-radius:2px; white-space:nowrap}
+  .back:hover{border-color:var(--signal); color:var(--signal-ink)}
+
+  main{width:min(680px,calc(100% - 40px)); margin-inline:auto; padding:48px 0 40px}
+  .eyebrow{margin:0 0 12px; font:600 11px/1 var(--cond); letter-spacing:.24em; text-transform:uppercase; color:var(--signal-ink)}
+  h1{margin:0 0 8px; font:600 clamp(2rem,1.4rem + 2.4vw,2.9rem)/1.06 var(--sans); letter-spacing:-.022em; text-wrap:balance}
+  .standfirst{margin:0 0 8px; color:var(--muted); font-size:1.12rem}
+  h2{margin:44px 0 12px; font:600 10.5px/1 var(--cond); letter-spacing:.2em; text-transform:uppercase; color:var(--muted)}
+  p{margin:0 0 16px}
+  strong{font-weight:600}
+
+  .pledge{list-style:none; margin:0; padding:0; border:1px solid var(--line); border-radius:2px; background:var(--panel)}
+  .pledge li{display:flex; gap:12px; padding:13px 16px; border-bottom:1px solid var(--line); font-size:15px}
+  .pledge li:last-child{border-bottom:0}
+  .pledge li::before{content:"—"; color:var(--signal-ink); font-family:var(--mono); flex:none}
+
+  .support{display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:6px 0 4px}
+  .support .kofi{display:inline-block; padding:11px 20px; border-radius:2px; background:var(--signal); color:#fff; font:600 12px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase; text-decoration:none}
+  .support .kofi:hover{filter:brightness(1.08)}
+  .support small{color:var(--faint); font-family:var(--mono); font-size:12px}
+
+  .signoff{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:400 14px/1.6 var(--mono)}
+
+  footer{border-top:1px solid var(--line); padding:26px 0 40px; margin-top:40px}
+  footer .wrap{display:flex; flex-wrap:wrap; gap:10px 20px; justify-content:space-between; font-size:12px; color:var(--faint); font-family:var(--mono)}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="readout"><div class="wrap">Open index &middot; free forever &middot; donation-supported</div></div>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="wordmark" href="./"><img class="logo light" src="assets/logo-light.png" width="51" height="22" alt="" aria-hidden="true"><img class="logo dark" src="assets/logo-dark.png" width="51" height="22" alt="" aria-hidden="true">RemoteCurrent <span>/ about</span></a>
+    <a class="back" href="./">&#8592; Back to the board</a>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">About</p>
+  <h1>A remote job index you can actually trust.</h1>
+  <p class="standfirst">RemoteCurrent reads job listings straight from employers&rsquo; own hiring systems, every hour, and shows you exactly where each one came from.</p>
+
+  <h2>What it is</h2>
+  <p>Most job sites are aggregators. They copy listings from other aggregators, keep stale posts alive to look busy, and route your application through their own funnel. RemoteCurrent does none of that. It polls the public feeds that employers&rsquo; career pages already use &mdash; Greenhouse, Lever, Ashby, Workday and others &mdash; normalizes what it finds, classifies how remote each role really is, and links you to the employer&rsquo;s own application page. Nothing in between.</p>
+  <p>Every listing shows its source, the employer&rsquo;s posted date, and that it was still live in the most recent sweep. The <a href="sources.html">feed status page</a> shows how every source is doing in real time.</p>
+
+  <h2>The pledge</h2>
+  <ul class="pledge">
+    <li>No account required to search. Ever.</li>
+    <li>No paywalled listings, no paywalled application links.</li>
+    <li>Every job links to the employer&rsquo;s real application page.</li>
+    <li>Employers cannot pay for ranking or placement.</li>
+    <li>No resumes stored, no profiles, no auto-apply.</li>
+    <li>Remote-location restrictions are stated with a confidence score and evidence.</li>
+    <li>Corrections are public and versioned in the open-source repository.</li>
+  </ul>
+
+  <h2>Who runs it</h2>
+  <p>RemoteCurrent is built and maintained by <strong>Orpheus Rook</strong> (<a href="https://rook.works" target="_blank" rel="noopener noreferrer">rook.works</a>) as an independent project. It has no company behind it, no investors, and no advertising. The code, the source registry, and every classification rule are open at <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">github.com/JJHerrmann/remote-current</a> &mdash; audit any of it.</p>
+
+  <h2>What it costs</h2>
+  <p>Today, almost nothing. The crawler runs on GitHub Actions&rsquo; free tier and the site is served from GitHub Pages; the only real expense is the domain name. That is why there is no funding thermometer here yet &mdash; there is barely anything to fund.</p>
+  <p>If RemoteCurrent grows enough to outgrow the free tiers &mdash; a real database, a search API, email digests &mdash; that move to paid infrastructure will be shown here in full: what it is, what it costs per month, and how close reader support comes to covering it. Paid services get switched on only when donations can carry them, never on credit and never by adding ads.</p>
+
+  <h2>Support it</h2>
+  <p>If RemoteCurrent has saved you time, you can chip in on Ko-fi. A few dollars once is welcome; a few dollars a month is what keeps a new source online and the lights on as it grows. It stays free for everyone either way.</p>
+  <div class="support">
+    <a class="kofi" href="https://ko-fi.com/hearthandrook" target="_blank" rel="noopener noreferrer">&#9749; Support on Ko-fi</a>
+    <small>one-time or monthly &middot; ko-fi.com/hearthandrook</small>
+  </div>
+
+  <p class="signoff">Read directly from the source. Linked straight to the employer. Free, and staying that way.<br>&mdash; Orpheus Rook</p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>RemoteCurrent &middot; open index of remote jobs</span>
+    <span><a href="./">Board</a> &middot; <a href="sources.html">Feed status</a> &middot; <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">Source &#8599;</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Live health of every source RemoteCurrent collects from: fetch counts, remote yield, classification confidence, and errors.">
+<title>RemoteCurrent — Feed status</title>
+<link rel="canonical" href="https://jjherrmann.github.io/remote-current/sources.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RemoteCurrent">
+<meta property="og:title" content="RemoteCurrent — Feed status">
+<meta property="og:description" content="Live health of every source RemoteCurrent collects from: fetch counts, remote yield, classifier confidence, and errors.">
+<meta property="og:url" content="https://jjherrmann.github.io/remote-current/sources.html">
+<meta property="og:image" content="https://jjherrmann.github.io/remote-current/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jjherrmann.github.io/remote-current/assets/og-image.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#1b1e20">
+<link rel="alternate" type="application/rss+xml" title="RemoteCurrent — all remote jobs" href="feeds/all.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#e4e7e8; --panel:#f4f5f5; --raise:#fbfbfc;
+    --ink:#1b1e20; --muted:#5b6469; --faint:#8a9296;
+    --line:#c9cdce; --line-strong:#b2b8b9;
+    --signal:#a94e18; --signal-ink:#a94e18;
+    --ok:#1c7358; --warn:#a4671b; --bad:#a8322a;
+    --readout-bg:#1b1e20; --readout-ink:#d9dcd7; --readout-muted:#8c948f; --readout-line:#33383a;
+    --sans:'IBM Plex Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --cond:'IBM Plex Sans Condensed','IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono','Roboto Mono',Menlo,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#131619; --panel:#1b1f22; --raise:#20262b;
+      --ink:#e9e6de; --muted:#8b9298; --faint:#697076;
+      --line:#2d3339; --line-strong:#3b434b;
+      --signal:#e2812f; --signal-ink:#e88f42;
+      --ok:#4cbda0; --warn:#e2a24f; --bad:#e2726a;
+      --readout-bg:#0d1012; --readout-ink:#d5d8d3; --readout-muted:#79817d; --readout-line:#242a2c;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#131619; --panel:#1b1f22; --raise:#20262b;
+    --ink:#e9e6de; --muted:#8b9298; --faint:#697076;
+    --line:#2d3339; --line-strong:#3b434b;
+    --signal:#e2812f; --signal-ink:#e88f42;
+    --ok:#4cbda0; --warn:#e2a24f; --bad:#e2726a;
+    --readout-bg:#0d1012; --readout-ink:#d5d8d3; --readout-muted:#79817d; --readout-line:#242a2c;
+    color-scheme:dark;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  [hidden]{display:none !important}
+  body{margin:0; background:var(--bg); color:var(--ink); font:400 15px/1.55 var(--sans); -webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--signal); outline-offset:2px; border-radius:2px}
+  .wrap{width:min(1120px,100% - 40px); margin-inline:auto}
+
+  .readout{background:var(--readout-bg); color:var(--readout-ink); border-bottom:1px solid var(--readout-line)}
+  .readout .wrap{display:flex; flex-wrap:wrap; align-items:center; gap:6px 22px; padding:9px 0; font:500 11.5px/1.4 var(--mono); letter-spacing:.02em}
+  .readout b{color:var(--readout-ink); font-weight:600}
+  .readout .k{color:var(--readout-muted); text-transform:uppercase; letter-spacing:.12em; margin-right:6px}
+  .state{display:inline-flex; align-items:center; gap:7px; text-transform:uppercase; letter-spacing:.14em; font-weight:600}
+  .state .dot{width:7px; height:7px; border-radius:50%}
+  .state.ok{color:#4cbda0} .state.ok .dot{background:#4cbda0}
+  .state.warn{color:#e2a24f} .state.warn .dot{background:#e2a24f}
+  .state.bad{color:#e2726a} .state.bad .dot{background:#e2726a}
+
+  .mast{border-bottom:1px solid var(--line)}
+  .mast .wrap{display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:20px 0}
+  .wordmark{display:inline-flex; align-items:baseline; gap:10px; text-decoration:none; font:700 18px/1 var(--cond); letter-spacing:.16em; text-transform:uppercase}
+  .wordmark .logo{height:22px; width:auto; display:block; align-self:center}
+  .wordmark .logo.dark{display:none}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wordmark .logo.light{display:none} :root:not([data-theme="light"]) .wordmark .logo.dark{display:block}}
+  :root[data-theme="dark"] .wordmark .logo.light{display:none}
+  :root[data-theme="dark"] .wordmark .logo.dark{display:block}
+  :root[data-theme="light"] .wordmark .logo.light{display:block}
+  :root[data-theme="light"] .wordmark .logo.dark{display:none}
+  .wordmark span{color:var(--muted); font-weight:500}
+  .back{font:600 12px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase; text-decoration:none; padding:9px 14px; border:1px solid var(--line-strong); border-radius:2px; white-space:nowrap}
+  .back:hover{border-color:var(--signal); color:var(--signal-ink)}
+
+  .hero .wrap{padding:40px 0 22px}
+  .eyebrow{margin:0 0 12px; font:600 11px/1 var(--cond); letter-spacing:.24em; text-transform:uppercase; color:var(--signal-ink)}
+  h1{margin:0; font:600 clamp(1.9rem,1.3rem + 2.2vw,2.7rem)/1.08 var(--sans); letter-spacing:-.022em; text-wrap:balance; max-width:22ch}
+  .lede{margin:14px 0 0; color:var(--muted); font-size:1.02rem; max-width:60ch}
+
+  .tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:2px; margin:24px 0 8px}
+  .tile{background:var(--bg); padding:14px 15px}
+  .tile dt{font:600 9.5px/1 var(--cond); letter-spacing:.16em; text-transform:uppercase; color:var(--faint); margin-bottom:7px}
+  .tile dd{margin:0; font:600 24px/1 var(--mono); font-variant-numeric:tabular-nums}
+  .tile.flag dd{color:var(--bad)}
+
+  .board{padding:16px 0 60px}
+  .updated{font:500 12px/1.4 var(--mono); color:var(--faint); padding-bottom:10px}
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:2px}
+  table{border-collapse:collapse; width:100%; min-width:720px; font:400 13px/1.4 var(--mono)}
+  thead th{font:600 9.5px/1.3 var(--cond); letter-spacing:.14em; text-transform:uppercase; color:var(--faint); text-align:right; padding:11px 12px; border-bottom:1px solid var(--line-strong); background:var(--panel); white-space:nowrap}
+  thead th:first-child,thead th:nth-child(2){text-align:left}
+  tbody td{padding:11px 12px; border-bottom:1px solid var(--line); text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+  tbody td:first-child,tbody td:nth-child(2){text-align:left}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:var(--panel)}
+  .name{font-family:var(--sans); font-weight:600}
+  .type{color:var(--muted); text-transform:uppercase; letter-spacing:.06em; font-size:11px}
+  .sdot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; vertical-align:1px}
+  .sdot.ok{background:var(--ok)} .sdot.bad{background:var(--bad)}
+  .err{color:var(--bad); font-family:var(--sans); font-size:12px; text-align:left !important; white-space:normal; padding-top:0}
+  .scopes{color:var(--muted); font-size:11px}
+  .muted{color:var(--faint)}
+
+  footer{border-top:1px solid var(--line); padding:26px 0 40px; margin-top:12px}
+  footer .wrap{display:flex; flex-wrap:wrap; gap:10px 20px; justify-content:space-between; font-size:12px; color:var(--faint); font-family:var(--mono)}
+  footer a{color:var(--muted)}
+
+  @media (max-width:720px){ .tiles{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+<div class="readout">
+  <div class="wrap">
+    <span class="state" id="state"><span class="dot"></span> <span id="stateText">Loading</span></span>
+    <span><span class="k">Sources</span><b id="rCount">—</b></span>
+    <span><span class="k">Reporting</span><b id="rOk">—</b></span>
+    <span><span class="k">Erroring</span><b id="rErr">—</b></span>
+    <span><span class="k">Last sweep</span><b id="rSweep">—</b></span>
+    <span><span class="k">Next sweep</span><b id="rNext">—</b></span>
+  </div>
+</div>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="wordmark" href="./"><img class="logo light" src="assets/logo-light.png" width="51" height="22" alt="" aria-hidden="true"><img class="logo dark" src="assets/logo-dark.png" width="51" height="22" alt="" aria-hidden="true">RemoteCurrent <span>/ feed status</span></a>
+    <a class="back" href="./">&#8592; Back to the board</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Transparency</p>
+    <h1>How the feed is doing.</h1>
+    <p class="lede">Every source RemoteCurrent polls, updated on the same hourly schedule as the board. What each one returned, how much of it was genuinely remote, how confident the classifier was, and any error &mdash; nothing hidden.</p>
+  </div>
+</section>
+
+<main class="board">
+  <div class="wrap">
+    <dl class="tiles">
+      <div class="tile"><dt>Sources reporting</dt><dd id="tOk">—</dd></div>
+      <div class="tile flag"><dt>Sources erroring</dt><dd id="tErr">—</dd></div>
+      <div class="tile"><dt>Live listings</dt><dd id="tJobs">—</dd></div>
+      <div class="tile"><dt>Avg confidence</dt><dd id="tConf">—</dd></div>
+    </dl>
+    <div class="updated" id="updated"></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Source</th><th>System</th><th>Live</th><th>Fetched</th><th>Remote rate</th><th>Avg conf.</th><th>Scope mix</th><th>Last OK</th>
+        </tr></thead>
+        <tbody id="rows"><tr><td colspan="8" class="muted">Loading source health&hellip;</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Regenerated every crawl from <code>data/sources.json</code>.</span>
+    <span><a href="./">Board</a> &middot; <a href="about.html">About</a> &middot; <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">Source &#8599;</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var CRON_MIN = 17, HOUR = 3600000;
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+  var pad2 = function(n){ return (n<10?"0":"")+n; };
+
+  function stamp(t){
+    if(!t) return "—";
+    var d = new Date(t);
+    return pad2(d.getUTCHours())+":"+pad2(d.getUTCMinutes())+"Z";
+  }
+  function dayStamp(t){
+    if(!t) return "never";
+    var d = new Date(t), now = Date.now();
+    var days = Math.floor((now - d.getTime())/86400000);
+    if(days <= 0) return "today";
+    if(days === 1) return "yesterday";
+    return days + "d ago";
+  }
+  function nextSweep(fromMs){
+    var d = new Date(fromMs);
+    d.setUTCSeconds(0,0);
+    if(d.getUTCMinutes() >= CRON_MIN) d.setUTCHours(d.getUTCHours()+1);
+    d.setUTCMinutes(CRON_MIN);
+    return d.getTime();
+  }
+
+  function pct(n){ return (n*100).toFixed(0) + "%"; }
+  function scopeMix(scopes){
+    var keys = Object.keys(scopes || {});
+    if(!keys.length) return "—";
+    return keys.sort(function(a,b){ return scopes[b]-scopes[a]; })
+      .map(function(k){ return k.replace("_"," ").replace("remote ","") + " " + scopes[k]; })
+      .join(" · ");
+  }
+
+  fetch("data/sources.json", { cache: "no-store" })
+    .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(render)
+    .catch(function(err){
+      $("state").className = "state bad";
+      $("stateText").textContent = "Status unavailable";
+      $("rows").innerHTML = '<tr><td colspan="8" class="err">Could not load data/sources.json: ' + esc(err.message) + '</td></tr>';
+    });
+
+  function render(doc){
+    var sources = doc.sources || [];
+    var erroring = doc.errorCount || 0;
+    var okCount = doc.okCount != null ? doc.okCount : sources.length - erroring;
+
+    var cls = erroring === 0 ? "ok" : (erroring >= Math.ceil(sources.length/2) ? "bad" : "warn");
+    var label = erroring === 0 ? "Feed healthy" : erroring + (erroring === 1 ? " source down" : " sources down");
+    $("state").className = "state " + cls;
+    $("stateText").textContent = label;
+
+    $("rCount").textContent = sources.length;
+    $("rOk").textContent = okCount;
+    $("rErr").textContent = erroring;
+    $("rSweep").textContent = stamp(doc.generatedAt);
+    var base = doc.generatedAt ? new Date(doc.generatedAt).getTime() : Date.now();
+    $("rNext").textContent = stamp(nextSweep(Math.max(Date.now(), base)));
+
+    var confVals = sources.filter(function(s){ return s.avgConfidence != null; }).map(function(s){ return s.avgConfidence; });
+    var avgConf = confVals.length ? (confVals.reduce(function(a,b){ return a+b; },0)/confVals.length) : null;
+
+    $("tOk").textContent = okCount;
+    $("tErr").textContent = erroring;
+    $("tJobs").textContent = (doc.jobCount || 0).toLocaleString();
+    $("tConf").textContent = avgConf == null ? "—" : avgConf.toFixed(2);
+    $("updated").textContent = "Generated " + (doc.generatedAt ? new Date(doc.generatedAt).toUTCString() : "—");
+
+    $("rows").innerHTML = sources.map(function(s){
+      if(!s.ok){
+        return '<tr>' +
+          '<td><span class="sdot bad"></span><span class="name">' + esc(s.name) + '</span></td>' +
+          '<td class="type">' + esc(s.type) + '</td>' +
+          '<td colspan="5" class="err">error: ' + esc(s.error || "unknown") + '</td>' +
+          '<td class="muted">' + dayStamp(s.lastOkAt) + '</td>' +
+        '</tr>';
+      }
+      var rate = s.fetched ? s.visible / s.fetched : 0;
+      return '<tr>' +
+        '<td><span class="sdot ok"></span><span class="name">' + esc(s.name) + '</span></td>' +
+        '<td class="type">' + esc(s.type) + '</td>' +
+        '<td>' + (s.visible||0).toLocaleString() + '</td>' +
+        '<td class="muted">' + (s.fetched||0).toLocaleString() + '</td>' +
+        '<td>' + pct(rate) + '</td>' +
+        '<td>' + (s.avgConfidence == null ? "—" : s.avgConfidence.toFixed(2)) + '</td>' +
+        '<td class="scopes">' + esc(scopeMix(s.scopes)) + '</td>' +
+        '<td class="muted">' + dayStamp(s.lastOkAt) + '</td>' +
+      '</tr>';
+    }).join("");
+  }
+})();
+</script>
+</body>
+</html>
