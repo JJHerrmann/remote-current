@@ -83,6 +83,10 @@ real monthly cost and how close it is to covered. No feature is ever donor-only.
   `index.html`; `robots.txt`, `sitemap.xml`, Open Graph and Twitter cards with
   a rendered share image are in place. `crawler/seo.py`. Full effect needs a
   custom domain (root `robots.txt`) and a Search Console sitemap submission.
+- **`story.html`** — done. The canonical "why it exists" essay, with `Article`
+  / `BreadcrumbList` / `FAQPage` JSON-LD, its own OG tags, and a commented
+  GoatCounter hook on every page pending an account. It is the pillar the
+  launch kit and any future company pages link back to.
 - Weekly email digest per saved search, plus a public weekly newsletter
   ("N new remote roles, M newly hiring distributed companies"). The newsletter
   is shareable content and the primary channel for the funding ask.

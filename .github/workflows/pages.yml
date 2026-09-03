@@ -39,7 +39,7 @@ jobs:
       - name: Assemble static site
         run: |
           mkdir _site
-          cp index.html sources.html about.html favicon.ico robots.txt sitemap.xml _site/
+          cp index.html sources.html about.html story.html favicon.ico robots.txt sitemap.xml _site/
           cp -r assets _site/
           cp -r data _site/
           cp -r feeds _site/

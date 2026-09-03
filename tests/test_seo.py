@@ -36,7 +36,7 @@ class SeoTests(unittest.TestCase):
             tree = ET.parse(root / "sitemap.xml")
             ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
             locs = [el.text for el in tree.findall(".//s:loc", ns)]
-        self.assertEqual(locs, ["https://example.test/", "https://example.test/sources.html", "https://example.test/about.html"])
+        self.assertEqual(locs, ["https://example.test/", "https://example.test/story.html", "https://example.test/about.html", "https://example.test/sources.html"])
 
     def test_render_index_bakes_rows_and_itemlist(self):
         base = datetime(2026, 2, 1, tzinfo=timezone.utc)

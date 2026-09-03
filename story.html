@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A remote-jobs index read straight from employer hiring feeds every hour: no account, no paywall, no stored resumes. Why RemoteCurrent exists, how it works, and what I promise.">
+<title>Why I built RemoteCurrent: a free remote job board, no paywall</title>
+<link rel="canonical" href="https://jjherrmann.github.io/remote-current/story.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Orpheus Rook">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="RemoteCurrent">
+<meta property="og:title" content="Why I built RemoteCurrent: a free remote job board, no paywall">
+<meta property="og:description" content="I kept hitting job-board paywalls while looking for remote work I could do around my health. So I built an open index that reads listings straight from employer hiring feeds.">
+<meta property="og:url" content="https://jjherrmann.github.io/remote-current/story.html">
+<meta property="og:image" content="https://jjherrmann.github.io/remote-current/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:author" content="Orpheus Rook">
+<meta property="article:published_time" content="2026-09-03">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Why I built RemoteCurrent">
+<meta name="twitter:description" content="An open index that reads remote job listings straight from employer hiring feeds. No account, no paywall.">
+<meta name="twitter:image" content="https://jjherrmann.github.io/remote-current/assets/og-image.jpg">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#1b1e20">
+<link rel="alternate" type="application/rss+xml" title="RemoteCurrent — all remote jobs" href="feeds/all.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#e4e7e8; --panel:#f4f5f5; --raise:#fbfbfc;
+    --ink:#1b1e20; --muted:#5b6469; --faint:#8a9296;
+    --line:#c9cdce; --line-strong:#b2b8b9;
+    --signal:#a94e18; --signal-ink:#a94e18;
+    --ok:#1c7358;
+    --readout-bg:#1b1e20; --readout-ink:#d9dcd7; --readout-muted:#8c948f; --readout-line:#33383a;
+    --sans:'IBM Plex Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+    --cond:'IBM Plex Sans Condensed','IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono','Roboto Mono',Menlo,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#131619; --panel:#1b1f22; --raise:#20262b;
+      --ink:#e9e6de; --muted:#8b9298; --faint:#697076;
+      --line:#2d3339; --line-strong:#3b434b;
+      --signal:#e2812f; --signal-ink:#e88f42; --ok:#4cbda0;
+      --readout-bg:#0d1012; --readout-ink:#d5d8d3; --readout-muted:#79817d; --readout-line:#242a2c;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#131619; --panel:#1b1f22; --raise:#20262b;
+    --ink:#e9e6de; --muted:#8b9298; --faint:#697076;
+    --line:#2d3339; --line-strong:#3b434b;
+    --signal:#e2812f; --signal-ink:#e88f42; --ok:#4cbda0;
+    --readout-bg:#0d1012; --readout-ink:#d5d8d3; --readout-muted:#79817d; --readout-line:#242a2c;
+    color-scheme:dark;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink); font:400 16px/1.62 var(--sans); -webkit-font-smoothing:antialiased}
+  a{color:var(--signal-ink); text-decoration:underline; text-underline-offset:2px}
+  a:hover{text-decoration:none}
+  :focus-visible{outline:2px solid var(--signal); outline-offset:2px; border-radius:2px}
+  .wrap{width:min(1120px,100% - 40px); margin-inline:auto}
+
+  .readout{background:var(--readout-bg); color:var(--readout-ink); border-bottom:1px solid var(--readout-line)}
+  .readout .wrap{padding:9px 0; font:500 11.5px/1.4 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--readout-muted)}
+
+  .mast{border-bottom:1px solid var(--line)}
+  .mast .wrap{display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:20px 0}
+  .wordmark{display:inline-flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--ink); font:700 18px/1 var(--cond); letter-spacing:.16em; text-transform:uppercase}
+  .wordmark .logo{height:22px; width:auto; display:block; align-self:center}
+  .wordmark .logo.dark{display:none}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wordmark .logo.light{display:none} :root:not([data-theme="light"]) .wordmark .logo.dark{display:block}}
+  :root[data-theme="dark"] .wordmark .logo.light{display:none}
+  :root[data-theme="dark"] .wordmark .logo.dark{display:block}
+  :root[data-theme="light"] .wordmark .logo.light{display:block}
+  :root[data-theme="light"] .wordmark .logo.dark{display:none}
+  .wordmark span{color:var(--muted); font-weight:500}
+  .back{font:600 12px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase; text-decoration:none; color:var(--ink); padding:9px 14px; border:1px solid var(--line-strong); border-radius:2px; white-space:nowrap}
+  .back:hover{border-color:var(--signal); color:var(--signal-ink)}
+
+  main{width:min(680px,calc(100% - 40px)); margin-inline:auto; padding:48px 0 40px}
+  .eyebrow{margin:0 0 12px; font:600 11px/1 var(--cond); letter-spacing:.24em; text-transform:uppercase; color:var(--signal-ink)}
+  h1{margin:0 0 8px; font:600 clamp(2rem,1.4rem + 2.4vw,2.9rem)/1.08 var(--sans); letter-spacing:-.022em; text-wrap:balance}
+  .standfirst{margin:0 0 8px; color:var(--muted); font-size:1.12rem}
+  h2{margin:44px 0 12px; font:600 10.5px/1 var(--cond); letter-spacing:.2em; text-transform:uppercase; color:var(--muted)}
+  p{margin:0 0 16px}
+  strong{font-weight:600}
+  blockquote{margin:22px 0; padding:2px 0 2px 18px; border-left:3px solid var(--signal); color:var(--ink); font-size:1.15rem; line-height:1.5}
+
+  .knows{list-style:none; margin:0; padding:0; border:1px solid var(--line); border-radius:2px; background:var(--panel)}
+  .knows li{display:grid; grid-template-columns:auto 1fr; gap:12px; padding:13px 16px; border-bottom:1px solid var(--line); font-size:15px}
+  .knows li:last-child{border-bottom:0}
+  .knows b{font:600 10px/1.5 var(--cond); letter-spacing:.12em; text-transform:uppercase; color:var(--signal-ink); white-space:nowrap}
+  .knows .cant b{color:var(--faint)}
+
+  .support{display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:6px 0 4px}
+  .support .kofi{display:inline-block; padding:11px 20px; border-radius:2px; background:var(--signal); color:#fff; font:600 12px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase; text-decoration:none}
+  .support .kofi:hover{filter:brightness(1.08)}
+  .support small{color:var(--faint); font-family:var(--mono); font-size:12px}
+
+  .signoff{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:400 14px/1.6 var(--mono)}
+
+  footer{border-top:1px solid var(--line); padding:26px 0 40px; margin-top:40px}
+  footer .wrap{display:flex; flex-wrap:wrap; gap:10px 20px; justify-content:space-between; font-size:12px; color:var(--faint); font-family:var(--mono)}
+  footer a{color:var(--muted)}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"Article","headline":"Why I built RemoteCurrent: a free remote job board with no paywall","description":"I kept hitting job-board paywalls while looking for remote work I could do around my health, so I built an open index that reads listings straight from employer hiring feeds.","image":"https://jjherrmann.github.io/remote-current/assets/og-image.jpg","datePublished":"2026-09-03","dateModified":"2026-09-03","author":{"@type":"Person","name":"Orpheus Rook","url":"https://rook.works"},"publisher":{"@type":"Organization","name":"RemoteCurrent","url":"https://jjherrmann.github.io/remote-current/"},"mainEntityOfPage":"https://jjherrmann.github.io/remote-current/story.html"},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RemoteCurrent","item":"https://jjherrmann.github.io/remote-current/"},{"@type":"ListItem","position":2,"name":"The story","item":"https://jjherrmann.github.io/remote-current/story.html"}]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is RemoteCurrent free?","acceptedAnswer":{"@type":"Answer","text":"Yes, and it always will be. No account, no subscription, no paywalled listings, no ads, no stored resumes. Support is voluntary through Ko-fi."}},
+{"@type":"Question","name":"Does RemoteCurrent remove ghost jobs?","acceptedAnswer":{"@type":"Answer","text":"Not reliably, and neither can most job boards. It cannot see a company's internal hiring decisions, so it cannot label a listing real or fake. What it can do is check the employer's own public feed every hour and drop any listing that disappears from that feed, rather than keeping a stale copy. That removes one common kind of dead posting but is not proof the employer is actively hiring."}}
+]}
+]}</script>
+</head>
+<body>
+<div class="readout"><div class="wrap">Open index &middot; free forever &middot; the story</div></div>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="wordmark" href="./"><img class="logo light" src="assets/logo-light.png" width="51" height="22" alt="" aria-hidden="true"><img class="logo dark" src="assets/logo-dark.png" width="51" height="22" alt="" aria-hidden="true">RemoteCurrent <span>/ story</span></a>
+    <a class="back" href="./">&#8592; Back to the board</a>
+  </div>
+</header>
+
+<main>
+  <p class="eyebrow">The story</p>
+  <h1>I got mad at job-board paywalls, so I built RemoteCurrent</h1>
+  <p class="standfirst">RemoteCurrent is a free, open index of remote jobs, read straight from employer hiring feeds every hour &mdash; no account, no paywall, no stored r&eacute;sum&eacute;s. Here is why it exists.</p>
+
+  <h2>Why I built it</h2>
+  <p>A little about me and what I&rsquo;ve been doing for the last several weeks.</p>
+  <p>I&rsquo;ve been struggling with a conventional nine-to-five. Migraines, back problems, and other things keep interrupting my workflow and making my current role increasingly hard to sustain.</p>
+  <p>I thought: I already do a lot of data-analytics work. Maybe I can find a remote job that lets me do that from home &mdash; somewhere I can recline when my back hurts, or work asynchronously so that on a migraine day I can take an extended break, let it blow over, and continue afterward.</p>
+  <p>Then I kept running into paywalls.</p>
+  <p>I hate paywalls.</p>
+  <p>One site showed me nineteen jobs but told me there were more than a thousand others available if I paid $99 a year.</p>
+  <p>That bothered me. A lot.</p>
+  <p>These aren&rsquo;t secret jobs. They aren&rsquo;t a product someone manufactured. It&rsquo;s a curated aggregation of listings from employers&rsquo; own sites &mdash; including roles that never make it all the way to LinkedIn. It bothers me because it means someone in a financially secure position is leveraging people who are looking for work &mdash; whatever condition they may be in &mdash; and charging them for the chance to better their lives.</p>
+  <p>Seems gross.</p>
+  <p>So I decided I wanted an alternative: a site that pulls the listings and shows you the damn things without holding them hostage behind a subscription.</p>
+
+  <h2>How it works</h2>
+  <p>Every hour, RemoteCurrent checks public hiring feeds directly from employers &mdash; the ones their own career pages use, from Greenhouse, Lever, Ashby, Workday and others. It identifies the remote roles, normalizes them into a consistent format, and publishes them with links to <strong>apply directly through the employer</strong>. As I write this, it is tracking more than 3,500 remote listings from over 70 companies.</p>
+  <p>No accounts. No sponsors. No ads. No stored r&eacute;sum&eacute;s. No &ldquo;we found more matches &mdash; now pay up.&rdquo;</p>
+  <p>It is, admittedly, a very well-dressed pre-alpha. Remote work is described inconsistently across employers, hiring systems are messy, and automated classification should be scrutinized at the best of times. That is why the sourcing is visible and the project is open: you can see <a href="sources.html">every source and how it is doing</a>, <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">the code and every classification rule</a>, and a note on each listing showing where it came from and when it was last confirmed live. If you would rather it come to you, you can <a href="feeds/all.xml">subscribe to a filtered slice by RSS</a>.</p>
+
+  <h2>What about stale listings and ghost jobs?</h2>
+  <p>A &ldquo;ghost job&rdquo; usually means a published role an employer may not genuinely intend to fill. RemoteCurrent cannot see inside a company&rsquo;s hiring decisions, so it cannot label a listing real or ghost &mdash; and honestly, neither can anyone else.</p>
+  <p>What it can do is read the employer&rsquo;s own public feed every hour. When a listing disappears from that feed, it disappears from RemoteCurrent &mdash; it is not kept around as a scraped copy the way most aggregators do. That removes one common kind of dead posting, the long-expired repost. It is <em>not</em> proof that an employer is actively interviewing or intends to hire.</p>
+  <p>So it is worth being exact about what the site knows:</p>
+  <ul class="knows">
+    <li><b>Verifies</b><span>The listing was present in the employer&rsquo;s public hiring feed within the last hour, and links to that employer&rsquo;s real application page.</span></li>
+    <li><b>Infers</b><span>Remote scope (worldwide / region / country), seniority, and any salary range &mdash; automatically, each with a stated confidence, and open to correction.</span></li>
+    <li class="cant"><b>Can&rsquo;t know</b><span>Whether the employer is actively interviewing, whether the role was quietly filled, or whether the posting exists mainly to collect r&eacute;sum&eacute;s.</span></li>
+  </ul>
+
+  <h2>What it costs, and what I promise</h2>
+  <p>Right now, almost nothing. The crawler runs on free CI and the site is served as static files; the only real expense is a domain. If RemoteCurrent grows enough to need paid infrastructure, that move will be shown in full &mdash; what it is, what it costs per month, and how close reader support comes to covering it. Paid services get switched on only when donations can carry them, never on credit and never by adding ads.</p>
+  <p>I&rsquo;m committed to RemoteCurrent <strong>never being sold, never requiring a subscription, and never charging anyone a dime to look for work</strong>. Frankly, the listings aren&rsquo;t mine to sell. They belong to the employers publishing them and the people trying to find them.</p>
+  <p>Anyone can build another AI job board, and plenty of people have. What I&rsquo;m trying to build is something transparent, useful, and accountable instead of another layer of algorithmic slop between people and work.</p>
+
+  <h2>A note on how I built it</h2>
+  <p>I know this doesn&rsquo;t sit well with everyone, and that&rsquo;s fine. I did not type every line of this. I typed very few of them. I used Claude Code to implement what I wanted &mdash; the connections to employers&rsquo; public hiring feeds, the layout, the hourly refresh.</p>
+  <p>That&rsquo;s what made it feasible for one person, dealing with a fair amount at the moment, to pull this together in a few weeks while keeping human judgment in the loop until it was something I was comfortable putting online under my name.</p>
+  <p>I&rsquo;d love your feedback &mdash; on the site as it exists and on what to build next.</p>
+
+  <h2>If it helps</h2>
+  <p>If you like the concept, enjoy the workflow, or find something that helps you: <a href="./">browse the board</a>, share it around, and leave me a coffee if you can.</p>
+  <div class="support">
+    <a class="kofi" href="https://ko-fi.com/mindpalacegarden" target="_blank" rel="noopener noreferrer">&#9749; Support on Ko-fi</a>
+    <small>one-time or monthly &middot; ko-fi.com/mindpalacegarden</small>
+  </div>
+
+  <p class="signoff">Read directly from the source. Linked straight to the employer. Free, and staying that way.<br>&mdash; Orpheus Rook</p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>RemoteCurrent &middot; open index of remote jobs</span>
+    <span><a href="./">Board</a> &middot; <a href="about.html">About</a> &middot; <a href="sources.html">Feed status</a> &middot; <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">Source &#8599;</a></span>
+  </div>
+</footer>
+<!-- Privacy-friendly analytics: make a site at goatcounter.com, then replace YOURCODE below and uncomment.
+<script data-goatcounter="https://YOURCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+-->
+</body>
+</html>
