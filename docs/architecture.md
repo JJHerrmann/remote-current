@@ -66,6 +66,13 @@ Per-source health is published to `data/sources.json` each run: fetch count,
 visible remote count, average classification confidence, scope mix, last
 successful run, and any error. The `/sources` page renders it.
 
+**Discovery vs. canonical.** Not every source is the employer's own feed. A
+job record's `canonical` flag, `discoveryProvider`/`discoveryUrl`, and
+optional `discoveredVia` list make that distinction explicit rather than
+letting the same requisition become a second row because a different site
+happened to list it first. See `docs/source-tiering.md` for the tier model
+and `crawler/resolve.py` for the matching logic.
+
 ## Deployment target
 
 - Scheduled Python crawler on GitHub Actions

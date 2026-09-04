@@ -2,8 +2,10 @@
 
 RemoteCurrent is a donation-supported public index of remote jobs. This file
 records what it is trying to be and the order of work to get there. It sits
-alongside [architecture.md](architecture.md) (how it is built) and
-[source-discovery.md](source-discovery.md) (how coverage grows).
+alongside [architecture.md](architecture.md) (how it is built),
+[source-discovery.md](source-discovery.md) (how the Tier-1 registry grows),
+and [source-tiering.md](source-tiering.md) (why Tier 1/2/3 sources are
+handled differently, and the discovery-vs-canonical dedup rule).
 
 ## Positioning
 
@@ -96,9 +98,19 @@ real monthly cost and how close it is to covered. No feature is ever donor-only.
 
 ### Phase 5 — Differentiation
 
-- Ghost-job and repost flagging — listings open 60+ days, or gone and returned.
+- **Discovery/canonical resolution** — piloted. `crawler/resolve.py` +
+  `crawler/weworkremotely.py`: a Tier-3 board (We Work Remotely) is now
+  resolved against the canonical Tier-1 dataset rather than ingested as its
+  own rows. See `docs/source-tiering.md`. This is the mechanism repost
+  flagging below needs; it does not do the flagging itself yet.
+- Ghost-job and repost flagging — listings open 60+ days, or gone and
+  returned.
 - Timezone-overlap filter — for remote work this matters more than country.
 - Salary as a first-class filter with a visible coverage statistic.
+- Remaining Tier-1 ATS adapters (iCIMS, Jobvite, Taleo/Oracle Recruiting, ADP
+  Recruiting, Paylocity, BambooHR) and the rest of the Tier-3 boards (Remote
+  OK, Working Nomads, Remotive, and others) — not started; see
+  `docs/source-tiering.md`.
 
 ## Not doing
 
