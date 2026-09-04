@@ -1,0 +1,7 @@
+name = "remotecurrent-preview"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# No custom domain or route needed. Deploying with the free workers.dev
+# subdomain is enough -- the frontend (served from GitHub Pages) calls it
+# cross-origin. See ../README.md in this folder for the one-time setup.

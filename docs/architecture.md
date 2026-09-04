@@ -81,6 +81,14 @@ and `crawler/resolve.py` for the matching logic.
 - Static frontend served through Cloudflare
 - RSS before email, avoiding early deliverability and privacy overhead
 
+**Built, not yet deployed:** `worker/` holds a first Cloudflare Worker --
+not the D1-backed read API above, but a narrower `/preview?job=<id>` fetch-
+on-demand endpoint (no storage; live employer-page fetch through Cloudflare's
+HTTP cache) backing the frontend's per-listing preview. See
+`worker/README.md` for coverage, deploy steps, and cost. `index.html` is
+wired for it behind a `PREVIEW_API` constant (currently `null`, i.e. off) --
+set that constant to the deployed `*.workers.dev` URL to turn previews on.
+
 ## Explicit non-goals for the MVP
 
 - Accepting or submitting job applications
