@@ -176,6 +176,10 @@
     linear-gradient(45deg,transparent 50%,var(--muted) 50%) calc(100% - 6px) 55%/5px 5px no-repeat,
     linear-gradient(135deg,var(--muted) 50%,transparent 50%) calc(100% - 1px) 55%/5px 5px no-repeat;
     background-color:color-mix(in srgb, var(--ink) 8%, transparent);}
+  /* The open dropdown's option list is native chrome, not this box -- style
+     it explicitly or it falls back to a plain white popup, unreadable
+     against the light text color the closed control inherits in dark mode. */
+  .field select option{background-color:var(--raise); color:var(--ink)}
   .field.check{flex-direction:row; align-items:center; gap:8px; cursor:pointer}
   .field.check label{margin:0; font:600 11px/1.2 var(--cond); letter-spacing:.08em; color:var(--muted); text-transform:uppercase; cursor:pointer}
   .field.check input{width:15px; height:15px; flex:none; margin:0; cursor:pointer; accent-color:var(--signal)}
