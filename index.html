@@ -174,7 +174,8 @@
   }
   .field select{cursor:pointer; padding-right:14px; background:
     linear-gradient(45deg,transparent 50%,var(--muted) 50%) calc(100% - 6px) 55%/5px 5px no-repeat,
-    linear-gradient(135deg,var(--muted) 50%,transparent 50%) calc(100% - 1px) 55%/5px 5px no-repeat;}
+    linear-gradient(135deg,var(--muted) 50%,transparent 50%) calc(100% - 1px) 55%/5px 5px no-repeat;
+    background-color:color-mix(in srgb, var(--ink) 8%, transparent);}
   .field.check{flex-direction:row; align-items:center; gap:8px; cursor:pointer}
   .field.check label{margin:0; font:600 11px/1.2 var(--cond); letter-spacing:.08em; color:var(--muted); text-transform:uppercase; cursor:pointer}
   .field.check input{width:15px; height:15px; flex:none; margin:0; cursor:pointer; accent-color:var(--signal)}
@@ -542,11 +543,42 @@
   const uniq = key => [...new Set(JOBS.map(j => j[key]).filter(Boolean))].sort();
   function fillSelect(sel, values, label){
     sel.length = 1;                                   // keep the "any" option
+    sel.options[0].dataset.base = "any";
     for (const v of values){
       const o = document.createElement("option");
       o.value = v;
-      o.textContent = label ? label(v) : v;
+      o.dataset.base = label ? label(v) : v;
+      o.textContent = o.dataset.base;
       sel.appendChild(o);
+    }
+  }
+
+  // Facet counts: for each dropdown, how many listings match given every
+  // *other* active filter -- so a count shown under "Company" already
+  // reflects the chosen Scope/Level/etc, the standard faceted-search read.
+  const FACET_KEY = { fScope: "remoteType", fCo: "company", fSrc: "source", fExp: "experienceLevel", fEmp: "employmentCategory" };
+  function facetPool(excludeId){
+    const q = $("q").value.trim().toLowerCase();
+    const pay = $("fPay").checked;
+    const active = {};
+    for (const id in FACET_KEY) if (id !== excludeId) active[FACET_KEY[id]] = $(id).value;
+    return JOBS.filter(j => {
+      for (const key in active) if (active[key] && j[key] !== active[key]) return false;
+      if (pay && !j.salaryText) return false;
+      if (q && !`${j.title} ${j.company} ${j.location} ${j.department || ""}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }
+  function updateFilterCounts(){
+    for (const id in FACET_KEY){
+      const sel = $(id), key = FACET_KEY[id];
+      const pool = facetPool(id);
+      const counts = {};
+      for (const j of pool) if (j[key]) counts[j[key]] = (counts[j[key]] || 0) + 1;
+      for (const opt of sel.options){
+        const n = opt.value ? (counts[opt.value] || 0) : pool.length;
+        opt.textContent = `${opt.dataset.base} (${n.toLocaleString()})`;
+      }
     }
   }
   function setSelect(id, value){
@@ -726,6 +758,7 @@
     history.replaceState(null, "", params.toString() ? `?${params}` : location.pathname);
 
     refreshSubscribe();
+    updateFilterCounts();
     shown = PAGE;
     render();
   }
