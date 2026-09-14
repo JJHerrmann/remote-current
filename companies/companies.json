@@ -227,5 +227,8 @@
   {"name": "sagetap", "type": "ashby", "key": "sagetap"},
   {"name": "starbridge", "type": "ashby", "key": "starbridge"},
   {"name": "stuut-ai", "type": "ashby", "key": "stuut-ai"},
-  {"name": "tenexlabs", "type": "ashby", "key": "tenexlabs"}
+  {"name": "tenexlabs", "type": "ashby", "key": "tenexlabs"},
+  {"name": "Blue Moon Metals", "type": "greenhouse", "key": "bluemoonmetals"},
+  {"name": "Scopely", "type": "greenhouse", "key": "scopely"},
+  {"name": "Weiss Asset Management", "type": "greenhouse", "key": "weissassetmanagement"}
 ]
