@@ -15,7 +15,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
-SITE_URL = os.environ.get("REMOTECURRENT_SITE_URL", "https://jjherrmann.github.io/remote-current").rstrip("/")
+SITE_URL = os.environ.get("REMOTECURRENT_SITE_URL", "https://remotecurrent.rook.works").rstrip("/")
 PRERENDER_ROWS = 40
 
 PAGES = [("/", "1.0"), ("/story.html", "0.7"), ("/about.html", "0.5"), ("/sources.html", "0.5")]

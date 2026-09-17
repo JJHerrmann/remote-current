@@ -44,8 +44,7 @@ dataset to GitHub Pages. Because the board is otherwise client-rendered, the
 `Organization` / `WebSite` structured data into the served `index.html` so
 search engines index real job content. `robots.txt`, `sitemap.xml`, Open Graph
 and Twitter cards are in place; the canonical host is
-`https://jjherrmann.github.io/remote-current/` until a custom domain is set (a
-find-and-replace in the three HTML `<head>`s and `crawler/seo.py`). Applications remain on the employer's own site. A
+`https://remotecurrent.rook.works/`. Applications remain on the employer's own site. A
 database, API, feeds, and alerts can be added once the collection quality is
 proven.
 

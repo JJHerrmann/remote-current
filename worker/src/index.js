@@ -17,7 +17,7 @@
 
 import { extractJobPostings, summarizePosting } from "./extract.js";
 
-const DATASET_URL = "https://jjherrmann.github.io/remote-current/data/jobs.json";
+const DATASET_URL = "https://remotecurrent.rook.works/data/jobs.json";
 const USER_AGENT = "RemoteCurrent-Preview/0.1 (+https://github.com/JJHerrmann/remote-current)";
 const ALLOWED_ORIGINS = new Set(["https://jjherrmann.github.io", "http://localhost:8000", "http://127.0.0.1:8000"]);
 

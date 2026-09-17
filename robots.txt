@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jjherrmann.github.io/remote-current/sitemap.xml
+Sitemap: https://remotecurrent.rook.works/sitemap.xml

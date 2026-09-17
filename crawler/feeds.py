@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 from xml.sax.saxutils import escape
 
-SITE_URL = os.environ.get("REMOTECURRENT_SITE_URL", "https://jjherrmann.github.io/remote-current").rstrip("/")
+SITE_URL = os.environ.get("REMOTECURRENT_SITE_URL", "https://remotecurrent.rook.works").rstrip("/")
 ITEM_CAP = 100  # newest N per feed
 
 
