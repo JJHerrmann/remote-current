@@ -230,5 +230,15 @@
   {"name": "tenexlabs", "type": "ashby", "key": "tenexlabs"},
   {"name": "Blue Moon Metals", "type": "greenhouse", "key": "bluemoonmetals"},
   {"name": "Scopely", "type": "greenhouse", "key": "scopely"},
-  {"name": "Weiss Asset Management", "type": "greenhouse", "key": "weissassetmanagement"}
+  {"name": "Weiss Asset Management", "type": "greenhouse", "key": "weissassetmanagement"},
+  {"name": "Lantern", "type": "greenhouse", "key": "employerdirecthealthcare"},
+  {"name": "Fanatics Commerce ", "type": "greenhouse", "key": "fanaticscommerce"},
+  {"name": "Paytient", "type": "greenhouse", "key": "paytient"},
+  {"name": "STR", "type": "greenhouse", "key": "systemstechnologyresearch"},
+  {"name": "analyticpartners", "type": "lever", "key": "analyticpartners"},
+  {"name": "eye-security", "type": "ashby", "key": "eye-security"},
+  {"name": "gimlet", "type": "ashby", "key": "gimlet"},
+  {"name": "mercor", "type": "ashby", "key": "mercor"},
+  {"name": "meticulous", "type": "ashby", "key": "meticulous"},
+  {"name": "normalcomputing", "type": "ashby", "key": "normalcomputing"}
 ]
