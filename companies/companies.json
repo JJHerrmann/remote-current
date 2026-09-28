@@ -240,5 +240,17 @@
   {"name": "gimlet", "type": "ashby", "key": "gimlet"},
   {"name": "mercor", "type": "ashby", "key": "mercor"},
   {"name": "meticulous", "type": "ashby", "key": "meticulous"},
-  {"name": "normalcomputing", "type": "ashby", "key": "normalcomputing"}
+  {"name": "normalcomputing", "type": "ashby", "key": "normalcomputing"},
+  {"name": "BitGo", "type": "greenhouse", "key": "bitgo"},
+  {"name": "Factored", "type": "greenhouse", "key": "factored"},
+  {"name": "Galaxy", "type": "greenhouse", "key": "galaxydigitalservices"},
+  {"name": "Levitate", "type": "greenhouse", "key": "levitate"},
+  {"name": "Mercury", "type": "greenhouse", "key": "mercury"},
+  {"name": "Everpure", "type": "greenhouse", "key": "purestorage"},
+  {"name": "Topsort", "type": "greenhouse", "key": "topsort"},
+  {"name": "moonpay", "type": "lever", "key": "moonpay"},
+  {"name": "alchemy", "type": "ashby", "key": "alchemy"},
+  {"name": "chainalysis-careers", "type": "ashby", "key": "chainalysis-careers"},
+  {"name": "ledger", "type": "ashby", "key": "ledger"},
+  {"name": "phantom", "type": "ashby", "key": "phantom"}
 ]
