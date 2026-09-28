@@ -11,6 +11,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
+from crawler.dates import listing_datetime
+
 USER_AGENT = "RemoteCurrent/0.1 (+https://github.com/JJHerrmann/remote-current)"
 
 
@@ -425,7 +427,7 @@ def collect(companies: list[dict[str, str]], previous: list[dict[str, Any]] | No
         job["firstSeenAt"] = old.get(job["id"], {}).get("firstSeenAt", now)
         job["lastSeenAt"] = now
         visible.append(job)
-    visible.sort(key=lambda job: job.get("postedAt") or job["firstSeenAt"], reverse=True)
+    visible.sort(key=listing_datetime, reverse=True)
     reports.sort(key=lambda report: (report["ok"], -report["visible"], report["name"].casefold()))
     return visible, errors, reports
 

@@ -15,6 +15,8 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from crawler.dates import listing_date, listing_datetime
+
 SITE_URL = os.environ.get("REMOTECURRENT_SITE_URL", "https://remotecurrent.rook.works").rstrip("/")
 PRERENDER_ROWS = 40
 
@@ -58,7 +60,7 @@ def _rel(hours: float) -> str:
 
 
 def _row_html(job: dict[str, Any], now: datetime) -> str:
-    posted = job.get("postedAt") or job.get("firstSeenAt")
+    posted = listing_date(job)
     try:
         hours = (now - datetime.fromisoformat(str(posted).replace("Z", "+00:00"))).total_seconds() / 3600
     except (TypeError, ValueError):
@@ -75,7 +77,7 @@ def _row_html(job: dict[str, Any], now: datetime) -> str:
         chips.append(f'<span class="chip">{_esc(_EXP.get(exp, exp))}</span>')
     if job.get("salaryText"):
         chips.append(f'<span class="chip pay">{_esc(job["salaryText"])}</span>')
-    chips.append(f'<span class="chip">&#8967; posted {_rel(hours)}</span>')
+    chips.append(f'<span class="chip">&#8967; listed {_rel(hours)}</span>')
     chips.append(f'<span class="chip src">&#9670; {_esc(job.get("source"))}</span>')
     return (
         f'<article class="row" style="--fresh:{fresh:.3f}">'
@@ -115,7 +117,7 @@ def _itemlist(jobs: list[dict[str, Any]], site_url: str) -> str:
 
 def render_index(template: str, jobs: list[dict[str, Any]], site_url: str = SITE_URL, limit: int = PRERENDER_ROWS) -> str:
     now = datetime.now(timezone.utc)
-    ordered = sorted(jobs, key=lambda job: job.get("postedAt") or job.get("firstSeenAt") or "", reverse=True)
+    ordered = sorted(jobs, key=listing_datetime, reverse=True)
     top = ordered[:limit]
 
     rows = "".join(_row_html(job, now) for job in top) or '<div class="empty">No listings right now.</div>'

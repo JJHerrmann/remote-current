@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 from pathlib import Path
+from crawler.dates import listing_datetime
 from crawler.pipeline import collect, write_dataset, write_sources
 from crawler.feeds import write_feeds
 from crawler.resolve import resolve
@@ -36,7 +37,7 @@ def main() -> None:
     jobs, errors, reports = collect(companies, previous, overrides)
     standalone, unresolved_count = _discover(jobs, previous)
     jobs = jobs + standalone
-    jobs.sort(key=lambda job: job.get("postedAt") or job["firstSeenAt"], reverse=True)
+    jobs.sort(key=listing_datetime, reverse=True)
 
     write_dataset(ROOT, jobs, errors)
     write_sources(ROOT, reports, previous_sources)

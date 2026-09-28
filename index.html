@@ -412,6 +412,7 @@
   "use strict";
 
   const PAGE = 24;
+  const COMPANY_PAGE_CAP = 4;
   const REFRESH_MS = 5 * 60 * 1000;
   const CRON_MIN = 17;                 // .github/workflows/pages.yml -> schedule cron "17 * * * *"
   const HOUR = 3600000;
@@ -439,7 +440,20 @@
     const d = new Date(t);
     return `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}Z`;
   };
-  const postedTs = j => new Date(j.postedAt || j.firstSeenAt || j.lastSeenAt || 0).getTime();
+  // Use the earliest known listing date. Some ATS feeds rewrite publishedAt
+  // when an old requisition is refreshed; that must not make it "new" again.
+  const postedTs = j => {
+    const dates = [j.postedAt, j.firstSeenAt]
+      .map(value => new Date(value || 0).getTime())
+      .filter(Number.isFinite)
+      .filter(value => value > 0);
+    return dates.length ? Math.min(...dates) : new Date(j.lastSeenAt || 0).getTime();
+  };
+  const wasSourceRefreshed = j => {
+    const posted = new Date(j.postedAt || 0).getTime();
+    const first = new Date(j.firstSeenAt || 0).getTime();
+    return Number.isFinite(posted) && Number.isFinite(first) && posted - first > 24 * HOUR;
+  };
   const ageHours = j => (Date.now() - postedTs(j)) / HOUR;
   const freshness = h => Math.max(0, Math.min(1, 1 - h / 72));
   const rel = h => {
@@ -657,13 +671,14 @@
           chipExp(j) +
           (emp && j.department ? `<span class="chip">${emp}</span>` : "") +
           (j.salaryText ? `<span class="chip pay">${esc(j.salaryText)}</span>` : "") +
-          `<span class="chip">&#8967; posted ${rel(h)}</span>` +
+          `<span class="chip">&#8967; listed ${rel(h)}</span>` +
+          (wasSourceRefreshed(j) ? `<span class="chip" title="The employer refreshed this existing listing without issuing a new job ID">source refreshed</span>` : "") +
           `<span class="chip src">&#9670; ${esc(j.source)}</span>` +
           (j.correction ? `<span class="chip ok" title="${esc(j.correction.reason || "Manually corrected")}"><span class="cdot"></span>&#10003; corrected</span>` : "") +
         `</div>` +
       `</div>` +
       `<div class="rail">` +
-        `<div class="bars" title="freshness — from the employer's posted date">${bars}</div>` +
+        `<div class="bars" title="freshness — earliest of the employer date and RemoteCurrent's first-seen date">${bars}</div>` +
         `<div class="age${h < 2 ? " new" : ""}">${h < 2 ? "NEW" : rel(h) + " ago"}</div>` +
         `<a class="apply" href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Apply direct &#8599;</a>` +
         (PREVIEW_API ? `<button type="button" class="preview-btn" data-preview aria-expanded="false">Preview</button>` : "") +
@@ -732,6 +747,35 @@
   });
 
   /* ---------- filter + render ---------- */
+  function interleaveCompanyBursts(sorted){
+    // Keep one employer's batch from taking over a browse page. Nothing is
+    // hidden: deferred roles flow into later pages. Company-specific and text
+    // searches retain strict date order because the user asked for that set.
+    if ($("fCo").value || $("q").value.trim()) return sorted;
+    let remaining = sorted.slice();
+    const ordered = [];
+    while (remaining.length){
+      const page = [], deferred = [], counts = new Map();
+      for (const job of remaining){
+        const company = job.company || "";
+        const count = counts.get(company) || 0;
+        if (page.length < PAGE && count < COMPANY_PAGE_CAP){
+          page.push(job);
+          counts.set(company, count + 1);
+        } else {
+          deferred.push(job);
+        }
+      }
+      if (!page.length){
+        ordered.push(...remaining);
+        break;
+      }
+      ordered.push(...page);
+      remaining = deferred;
+    }
+    return ordered;
+  }
+
   function apply(){
     const q = $("q").value.trim().toLowerCase();
     const scope = $("fScope").value, co = $("fCo").value, src = $("fSrc").value,
@@ -750,6 +794,7 @@
       }
       return true;
     }).sort((a, b) => postedTs(b) - postedTs(a));
+    view = interleaveCompanyBursts(view);
 
     const params = new URLSearchParams();
     if (q) params.set("q", q);

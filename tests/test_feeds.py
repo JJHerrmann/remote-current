@@ -62,6 +62,17 @@ class FeedTests(unittest.TestCase):
             self.assertNotIn("feeds/with-salary.xml", paths)
             self.assertFalse((root / "feeds" / "worldwide.xml").exists())
 
+    def test_ats_refresh_does_not_make_old_listing_new_again(self):
+        jobs = [
+            job(id="refreshed", postedAt="2026-09-28T12:00:00+00:00", firstSeenAt="2026-08-01T00:00:00+00:00"),
+            job(id="actually-new", postedAt="2026-09-28T10:00:00+00:00", firstSeenAt="2026-09-28T10:05:00+00:00"),
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_feeds(root, jobs)
+            items = ET.parse(root / "feeds" / "all.xml").getroot().find("channel").findall("item")
+            self.assertEqual(items[0].findtext("guid"), "remotecurrent:actually-new")
+
 
 if __name__ == "__main__":
     unittest.main()

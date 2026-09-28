@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Any
 from xml.sax.saxutils import escape
 
+from crawler.dates import listing_date, listing_datetime
+
 SITE_URL = os.environ.get("REMOTECURRENT_SITE_URL", "https://remotecurrent.rook.works").rstrip("/")
 ITEM_CAP = 100  # newest N per feed
 
@@ -39,7 +41,7 @@ def _item(job: dict[str, Any]) -> str:
         f"<title>{_cdata(title)}</title>",
         f"<link>{escape(job.get('url') or SITE_URL)}</link>",
         f'<guid isPermaLink="false">{escape("remotecurrent:" + (job.get("id") or ""))}</guid>',
-        f"<pubDate>{_rfc822(job.get('postedAt') or job.get('firstSeenAt'))}</pubDate>",
+        f"<pubDate>{_rfc822(listing_date(job))}</pubDate>",
         f"<category>{escape(job.get('remoteType') or 'remote')}</category>",
         f"<description>{_cdata(summary)}</description>",
         "</item>",
@@ -67,7 +69,7 @@ def write_feeds(root: Path, jobs: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Write standing RSS feeds plus feeds/index.json; return the catalog."""
     feeds_dir = root / "feeds"
     feeds_dir.mkdir(exist_ok=True)
-    ordered = sorted(jobs, key=lambda job: job.get("postedAt") or job.get("firstSeenAt") or "", reverse=True)
+    ordered = sorted(jobs, key=listing_datetime, reverse=True)
     catalog: list[dict[str, Any]] = []
 
     def emit(title: str, description: str, path: str, subset: list[dict[str, Any]]) -> None:
