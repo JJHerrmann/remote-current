@@ -182,7 +182,20 @@
   .field select option{background-color:var(--raise); color:var(--ink)}
   .field.check{flex-direction:row; align-items:center; gap:8px; cursor:pointer}
   .field.check label{margin:0; font:600 11px/1.2 var(--cond); letter-spacing:.08em; color:var(--muted); text-transform:uppercase; cursor:pointer}
-  .field.check input{width:15px; height:15px; flex:none; margin:0; cursor:pointer; accent-color:var(--signal)}
+  .field.check input{
+    appearance:none; -webkit-appearance:none; display:grid; place-content:center;
+    width:15px; height:15px; flex:none; margin:0; cursor:pointer;
+    border:1px solid var(--line-strong); border-radius:2px;
+    background:color-mix(in srgb,var(--muted) 24%,transparent);
+    transition:background .15s,border-color .15s;
+  }
+  .field.check input::after{
+    content:""; width:7px; height:4px; border:solid var(--bg); border-width:0 0 2px 2px;
+    transform:translateY(-1px) rotate(-45deg) scale(0); transition:transform .12s;
+  }
+  .field.check input:checked{background:var(--signal); border-color:var(--signal)}
+  .field.check input:checked::after{transform:translateY(-1px) rotate(-45deg) scale(1)}
+  .field.check:has(input:checked) label{color:var(--signal-ink)}
   .field:focus-within > label{color:var(--signal-ink)}
 
   /* ---------- board ---------- */
