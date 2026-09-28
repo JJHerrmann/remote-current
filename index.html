@@ -377,7 +377,7 @@
       <select id="fEmp"><option value="">any</option></select>
     </div>
     <div class="field check">
-      <input id="fPay" type="checkbox">
+      <input id="fPay" type="checkbox" checked>
       <label for="fPay">Pay shown</label>
     </div>
   </div>
@@ -621,7 +621,7 @@
     setSelect("fSrc", q.get("source"));
     setSelect("fExp", q.get("experience"));
     setSelect("fEmp", q.get("employment"));
-    $("fPay").checked = q.get("pay") === "1";
+    $("fPay").checked = q.get("pay") !== "0";
   }
 
   /* ---------- rows ---------- */
@@ -803,7 +803,7 @@
     if (src) params.set("source", src);
     if (exp) params.set("experience", exp);
     if (emp) params.set("employment", emp);
-    if (pay) params.set("pay", "1");
+    if (!pay) params.set("pay", "0");
     history.replaceState(null, "", params.toString() ? `?${params}` : location.pathname);
 
     refreshSubscribe();
