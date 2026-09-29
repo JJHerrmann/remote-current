@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="An open, hourly index of remote jobs read straight from employer applicant-tracking feeds. No paywall, no accounts — every listing links to the real application and shows where it came from.">
+<meta name="description" content="RemoteCurrent checks employer hiring systems every hour and publishes the remote jobs it finds — free, public, and linked directly to the employer.">
 <title>RemoteCurrent — fresh remote jobs, straight from employers</title>
 <meta name="google-site-verification" content="gqe_WQkt14UeuBCNf0QLPkCJOXcdYFUhgQ5OT_VyxhQ">
 <link rel="canonical" href="https://remotecurrent.rook.works/">
@@ -77,6 +77,12 @@
   :focus-visible{outline:2px solid var(--signal); outline-offset:2px; border-radius:2px}
   .wrap{width:min(1120px,100% - 40px); margin-inline:auto}
   .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+  .skip-link{
+    position:fixed; z-index:100; left:12px; top:12px; transform:translateY(-160%);
+    padding:10px 14px; border-radius:2px; background:var(--signal); color:#fff;
+    font:600 12px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase; text-decoration:none;
+  }
+  .skip-link:focus{transform:translateY(0)}
 
   /* ---------- wire crawl ---------- */
   .wire{background:var(--readout-bg); color:var(--readout-ink); border-bottom:1px solid var(--readout-line)}
@@ -311,6 +317,7 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#results">Skip to job results</a>
 <header class="mast">
   <div class="wrap">
     <a class="wordmark" href="./"><img class="logo light" src="assets/logo-light.png" width="51" height="22" alt="" aria-hidden="true"><img class="logo dark" src="assets/logo-dark.png" width="51" height="22" alt="" aria-hidden="true">RemoteCurrent</a>
@@ -392,7 +399,7 @@
   </div>
 </section>
 
-<main class="board">
+<main class="board" id="results" tabindex="-1">
   <div class="wrap">
     <div class="tally">
       <span><b id="tCount">0</b> shown</span>
@@ -400,6 +407,7 @@
       <span class="rule"></span>
       <span id="tSample"></span>
       <span class="subscribe">
+        <button type="button" id="clearFilters" class="linkbtn" title="Reset every search filter">Reset filters</button>
         <button type="button" id="copyLink" class="linkbtn" title="Copy a link to this exact search">Copy search link</button>
         <a id="rssLink" class="linkbtn" href="feeds/all.xml" target="_blank" rel="noopener noreferrer" title="Subscribe to the standing feed that best matches these filters">&#9670; RSS</a>
       </span>
@@ -408,14 +416,15 @@
       <div>
         <span class="eyebrow">Reader-supported public feed</span>
         <strong>RemoteCurrent is made possible by readers like you.</strong>
-        <p>Thousands of remote jobs, checked every hour, with no account or applicant paywall. If this service is useful to you, a contribution helps keep it independent and expand its coverage.</p>
+        <p>Thousands of remote jobs, checked every hour, with no account or applicant paywall. If RemoteCurrent saves you time, support helps maintain it, expand its coverage, and keep it free for everyone.</p>
       </div>
       <div>
         <a class="fund-cta" data-revenue="support" href="https://ko-fi.com/mindpalacegarden" target="_blank" rel="noopener noreferrer">Support this public feed &#8599;</a>
         <small>one-time or monthly &middot; no donor-only listings</small>
       </div>
     </aside>
-    <div class="rows" id="rows" aria-live="polite"><div class="empty" style="border-style:solid">Fetching the current feed&hellip;</div></div>
+    <p class="sr-only" id="resultStatus" role="status" aria-live="polite" aria-atomic="true">Fetching the current feed.</p>
+    <div class="rows" id="rows"><div class="empty" style="border-style:solid">Fetching the current feed&hellip;</div></div>
     <button class="more" id="more" hidden>Show more</button>
   </div>
 </main>
@@ -423,7 +432,7 @@
 <footer>
   <div class="wrap">
     <span>Listings are classified automatically and may contain errors. Verify location and eligibility on the employer&rsquo;s page before applying.</span>
-    <span><a href="story.html">The story</a> &middot; <a href="about.html">About</a> &middot; <a href="sources.html">Feed status</a> &middot; <a data-revenue="support" href="https://ko-fi.com/mindpalacegarden" target="_blank" rel="noopener noreferrer">Support RemoteCurrent</a> &middot; <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">Source &#8599;</a></span>
+    <span><a href="story.html">The story</a> &middot; <a href="about.html#methodology">Methodology</a> &middot; <a href="about.html#feedback">Feedback</a> &middot; <a href="sources.html">Feed status</a> &middot; <a data-revenue="support" href="https://ko-fi.com/mindpalacegarden" target="_blank" rel="noopener noreferrer">Support RemoteCurrent</a> &middot; <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">Source &#8599;</a></span>
   </div>
 </footer>
 
@@ -626,6 +635,13 @@
     setSelect("fEmp", q.get("employment"));
     $("fPay").checked = q.get("pay") !== "0";
   }
+  function clearFilters(){
+    $("q").value = "";
+    for (const id of ["fScope", "fCo", "fSrc", "fExp", "fEmp"]) $(id).value = "";
+    $("fPay").checked = true;
+    apply();
+    $("q").focus();
+  }
 
   /* ---------- rows ---------- */
   function chipScope(j){
@@ -819,12 +835,15 @@
     const slice = view.slice(0, shown);
     $("rows").innerHTML = slice.length
       ? slice.map(rowHTML).join("")
-      : '<div class="empty">No listings match those filters.</div>';
+      : '<div class="empty">No listings match those filters. <a href="./">Reset the search</a>.</div>';
     $("tCount").textContent = slice.length.toLocaleString();
     $("tFiltered").textContent = (JOBS.length && view.length !== JOBS.length)
       ? `of ${view.length.toLocaleString()} matched` : "";
     $("tSample").textContent = META
       ? `${JOBS.length.toLocaleString()} live listings · all seen in the ${stamp(META.generatedAt)} sweep` : "";
+    $("resultStatus").textContent = view.length
+      ? `${view.length.toLocaleString()} listings match. ${slice.length.toLocaleString()} currently shown.`
+      : "No listings match the current filters.";
     const more = $("more");
     if (shown < view.length){
       more.hidden = false;
@@ -869,6 +888,8 @@
   for (const id of ["q", "fScope", "fCo", "fSrc", "fExp", "fEmp", "fPay"])
     $(id).addEventListener(id === "q" ? "input" : "change", apply);
   $("more").addEventListener("click", () => { shown += PAGE; render(); });
+  $("clearFilters").addEventListener("click", clearFilters);
+  addEventListener("popstate", () => { applyParamsToControls(); apply(); });
   $("copyLink").addEventListener("click", () => {
     const done = () => flash("— search link copied");
     if (navigator.clipboard && navigator.clipboard.writeText)

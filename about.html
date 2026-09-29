@@ -93,6 +93,7 @@
   h1{margin:0 0 8px; font:600 clamp(2rem,1.4rem + 2.4vw,2.9rem)/1.06 var(--sans); letter-spacing:-.022em; text-wrap:balance}
   .standfirst{margin:0 0 8px; color:var(--muted); font-size:1.12rem}
   h2{margin:44px 0 12px; font:600 10.5px/1 var(--cond); letter-spacing:.2em; text-transform:uppercase; color:var(--muted)}
+  h2[id]{scroll-margin-top:24px}
   p{margin:0 0 16px}
   strong{font-weight:600}
 
@@ -111,6 +112,12 @@
   footer{border-top:1px solid var(--line); padding:26px 0 40px; margin-top:40px}
   footer .wrap{display:flex; flex-wrap:wrap; gap:10px 20px; justify-content:space-between; font-size:12px; color:var(--faint); font-family:var(--mono)}
   footer a{color:var(--muted)}
+  @media (max-width:560px){
+    .mast .wrap{align-items:center; flex-wrap:wrap; gap:14px; padding:18px 0}
+    .wordmark{font-size:16px; letter-spacing:.13em}
+    .wordmark span{display:none}
+    .back{width:100%; text-align:center}
+  }
 </style>
 </head>
 <body>
@@ -136,6 +143,10 @@
   <p>Most job sites are aggregators. They copy listings from other aggregators, keep stale posts alive to look busy, and route your application through their own funnel. RemoteCurrent does none of that. It polls the public feeds that employers&rsquo; career pages already use &mdash; Greenhouse, Lever, Ashby, Workday and others &mdash; normalizes what it finds, classifies how remote each role really is, and links you to the employer&rsquo;s own application page. Nothing in between.</p>
   <p>Every listing shows its source, the employer&rsquo;s posted date, and that it was still live in the most recent sweep. The <a href="sources.html">feed status page</a> shows how every source is doing in real time.</p>
 
+  <h2 id="methodology">How it works, precisely</h2>
+  <p>The live RemoteCurrent pipeline is ordinary deterministic software. It requests published employer hiring feeds, applies public classification rules, writes a versioned dataset, and rebuilds this static site. No generative-AI model selects jobs, invents listing details, or decides how a role is classified. LLM-assisted development tools have helped write and maintain the software; the production inputs, rules, and outputs remain inspectable in the <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">public repository</a>.</p>
+  <p>RemoteCurrent verifies that a listing appeared in the employer&rsquo;s public feed during the displayed sweep. It cannot verify that the employer is actively interviewing, and its interpretation of remote scope can be wrong. The employer&rsquo;s application page is always the final authority.</p>
+
   <h2 id="pledge">The pledge</h2>
   <ul class="pledge">
     <li>No account required to search. Ever.</li>
@@ -155,11 +166,17 @@
   <p>If RemoteCurrent grows enough to outgrow the free tiers &mdash; a real database, a search API, email digests &mdash; that move to paid infrastructure will be shown here in full: what it is, what it costs per month, and how close reader support comes to covering it. Paid services get switched on only when donations can carry them, never on credit and never by adding ads.</p>
 
   <h2 id="support">Support RemoteCurrent</h2>
-  <p>If RemoteCurrent has saved you time, you can chip in on Ko-fi. A few dollars once is welcome; a few dollars a month is what keeps a new source online and the lights on as it grows. It stays free for everyone either way.</p>
+  <p>If RemoteCurrent has saved you time, you can chip in on Ko-fi. Support helps maintain the service, improve its coverage, and keep it free for everyone. Access, ranking, and application links never depend on contributing.</p>
   <div class="support">
     <a class="kofi" href="https://ko-fi.com/mindpalacegarden" target="_blank" rel="noopener noreferrer">&#9749; Support on Ko-fi</a>
     <small>one-time or monthly &middot; ko-fi.com/mindpalacegarden</small>
   </div>
+
+  <h2 id="feedback">Corrections and feedback</h2>
+  <p>Every listing has a <b>flag</b> link that opens a correction report with the listing ID, source, and current classification already included. For a broader bug or suggestion, <a href="https://github.com/JJHerrmann/remote-current/issues/new" target="_blank" rel="noopener noreferrer">open a project issue</a> or contact <a href="https://bsky.app/profile/remotecurrent.bsky.social" target="_blank" rel="noopener noreferrer">@remotecurrent.bsky.social</a>. Please do not send r&eacute;sum&eacute;s or application materials; RemoteCurrent is not an employer or recruiter.</p>
+
+  <h2 id="privacy">What it does not collect</h2>
+  <p>RemoteCurrent has no user accounts, stores no r&eacute;sum&eacute;s, and does not handle job applications. It currently runs no first-party visitor analytics and sets no first-party tracking cookies. The static site is hosted by GitHub Pages, the support button opens Ko-fi, and the typefaces are delivered by Google Fonts; those providers may receive ordinary request metadata under their own policies.</p>
 
   <p class="signoff">Read directly from the source. Linked straight to the employer. Free, and staying that way.<br>&mdash; Orpheus Rook</p>
 </main>
@@ -167,7 +184,7 @@
 <footer>
   <div class="wrap">
     <span>RemoteCurrent &middot; open index of remote jobs</span>
-    <span><a href="./">Board</a> &middot; <a href="story.html">The story</a> &middot; <a href="sources.html">Feed status</a> &middot; <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">Source &#8599;</a></span>
+    <span><a href="./">Board</a> &middot; <a href="story.html">The story</a> &middot; <a href="#methodology">Methodology</a> &middot; <a href="#feedback">Feedback</a> &middot; <a href="sources.html">Feed status</a> &middot; <a href="https://github.com/JJHerrmann/remote-current" target="_blank" rel="noopener noreferrer">Source &#8599;</a></span>
   </div>
 </footer>
 <!-- Privacy-friendly analytics: make a site at goatcounter.com, then replace YOURCODE below and uncomment.

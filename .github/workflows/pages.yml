@@ -2,6 +2,9 @@ name: Refresh jobs and deploy Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "data/**"
+      - "sitemap.xml"
   workflow_dispatch:
   schedule:
     - cron: "17 * * * *"

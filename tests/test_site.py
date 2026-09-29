@@ -33,6 +33,20 @@ class PublicSiteTests(unittest.TestCase):
         self.assertIn('<a href="story.html" aria-current="page">The story</a>', story)
         self.assertIn('<h2 id="pledge">The pledge</h2>', about)
 
+    def test_board_has_accessible_search_controls(self):
+        page = (ROOT / "index.html").read_text()
+        self.assertIn('class="skip-link" href="#results"', page)
+        self.assertIn('id="clearFilters"', page)
+        self.assertIn('id="resultStatus" role="status" aria-live="polite"', page)
+        self.assertNotIn('class="rows" id="rows" aria-live=', page)
+
+    def test_about_page_documents_methodology_feedback_and_privacy(self):
+        page = (ROOT / "about.html").read_text()
+        self.assertIn('<h2 id="methodology">How it works, precisely</h2>', page)
+        self.assertIn('No generative-AI model selects jobs', page)
+        self.assertIn('<h2 id="feedback">Corrections and feedback</h2>', page)
+        self.assertIn('<h2 id="privacy">What it does not collect</h2>', page)
+
 
 if __name__ == "__main__":
     unittest.main()
