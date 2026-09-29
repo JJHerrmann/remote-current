@@ -65,7 +65,14 @@
   .wrap{width:min(1120px,100% - 40px); margin-inline:auto}
 
   .readout{background:var(--readout-bg); color:var(--readout-ink); border-bottom:1px solid var(--readout-line)}
-  .readout .wrap{padding:9px 0; font:500 11.5px/1.4 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--readout-muted)}
+  .readout .wrap{display:flex; align-items:center; flex-wrap:wrap; padding:0}
+  .readout a{
+    display:inline-flex; align-items:center; padding:9px 0;
+    color:var(--readout-muted); text-decoration:none;
+    font:500 11.5px/1.4 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+  }
+  .readout a + a::before{content:"◆"; margin:0 14px; color:var(--signal); font-size:8px}
+  .readout a:hover{color:var(--readout-ink)}
 
   .mast{border-bottom:1px solid var(--line)}
   .mast .wrap{display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:20px 0}
@@ -107,7 +114,11 @@
 </style>
 </head>
 <body>
-<div class="readout"><div class="wrap">Open index &middot; free forever &middot; donation-supported</div></div>
+<nav class="readout" aria-label="Project sections"><div class="wrap">
+  <a href="./">Open index</a>
+  <a href="#pledge">Free forever</a>
+  <a href="#support">Donation-supported</a>
+</div></nav>
 
 <header class="mast">
   <div class="wrap">
@@ -125,7 +136,7 @@
   <p>Most job sites are aggregators. They copy listings from other aggregators, keep stale posts alive to look busy, and route your application through their own funnel. RemoteCurrent does none of that. It polls the public feeds that employers&rsquo; career pages already use &mdash; Greenhouse, Lever, Ashby, Workday and others &mdash; normalizes what it finds, classifies how remote each role really is, and links you to the employer&rsquo;s own application page. Nothing in between.</p>
   <p>Every listing shows its source, the employer&rsquo;s posted date, and that it was still live in the most recent sweep. The <a href="sources.html">feed status page</a> shows how every source is doing in real time.</p>
 
-  <h2>The pledge</h2>
+  <h2 id="pledge">The pledge</h2>
   <ul class="pledge">
     <li>No account required to search. Ever.</li>
     <li>No paywalled listings, no paywalled application links.</li>

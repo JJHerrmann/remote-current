@@ -69,7 +69,14 @@
   .wrap{width:min(1120px,100% - 40px); margin-inline:auto}
 
   .readout{background:var(--readout-bg); color:var(--readout-ink); border-bottom:1px solid var(--readout-line)}
-  .readout .wrap{padding:9px 0; font:500 11.5px/1.4 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--readout-muted)}
+  .readout .wrap{display:flex; align-items:center; flex-wrap:wrap; padding:0}
+  .readout a{
+    display:inline-flex; align-items:center; padding:9px 0;
+    color:var(--readout-muted); text-decoration:none;
+    font:500 11.5px/1.4 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+  }
+  .readout a + a::before{content:"◆"; margin:0 14px; color:var(--signal); font-size:8px}
+  .readout a:hover,.readout a[aria-current="page"]{color:var(--readout-ink)}
 
   .mast{border-bottom:1px solid var(--line)}
   .mast .wrap{display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:20px 0}
@@ -121,7 +128,11 @@
 ]}</script>
 </head>
 <body>
-<div class="readout"><div class="wrap">Open index &middot; free forever &middot; the story</div></div>
+<nav class="readout" aria-label="Project sections"><div class="wrap">
+  <a href="./">Open index</a>
+  <a href="about.html#pledge">Free forever</a>
+  <a href="story.html" aria-current="page">The story</a>
+</div></nav>
 
 <header class="mast">
   <div class="wrap">

@@ -24,6 +24,15 @@ class PublicSiteTests(unittest.TestCase):
         page = (ROOT / "about.html").read_text()
         self.assertIn('<h2 id="support">Support RemoteCurrent</h2>', page)
 
+    def test_secondary_page_readouts_are_navigation(self):
+        story = (ROOT / "story.html").read_text()
+        about = (ROOT / "about.html").read_text()
+        self.assertIn('<nav class="readout" aria-label="Project sections">', story)
+        self.assertIn('<a href="./">Open index</a>', story)
+        self.assertIn('<a href="about.html#pledge">Free forever</a>', story)
+        self.assertIn('<a href="story.html" aria-current="page">The story</a>', story)
+        self.assertIn('<h2 id="pledge">The pledge</h2>', about)
+
 
 if __name__ == "__main__":
     unittest.main()
