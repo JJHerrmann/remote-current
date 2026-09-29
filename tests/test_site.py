@@ -47,6 +47,16 @@ class PublicSiteTests(unittest.TestCase):
         self.assertIn('<h2 id="feedback">Corrections and feedback</h2>', page)
         self.assertIn('<h2 id="privacy">What it does not collect</h2>', page)
 
+    def test_all_public_pages_use_the_evergreen_share_card(self):
+        share_url = "https://remotecurrent.rook.works/assets/og-image-evergreen.jpg"
+        for name in ("index.html", "story.html", "about.html", "sources.html"):
+            page = (ROOT / name).read_text()
+            self.assertIn(f'<meta property="og:image" content="{share_url}">', page)
+            self.assertIn(f'<meta name="twitter:image" content="{share_url}">', page)
+            self.assertIn('<meta property="og:image:width" content="1200">', page)
+            self.assertIn('<meta property="og:image:height" content="630">', page)
+            self.assertNotIn('assets/og-image.jpg', page)
+
 
 if __name__ == "__main__":
     unittest.main()
