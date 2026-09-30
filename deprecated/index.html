@@ -47,5 +47,6 @@
     ["query","scope","company","source","experience","employment","pay"].forEach(id=>$(id).addEventListener(id==="query"?"input":"change",filter));
     fetch("../data/jobs.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()}).then(data=>{state.jobs=data.jobs||[];$("updated").textContent=`Updated ${new Date(data.generatedAt).toLocaleString()}`;fillFilters();const params=new URLSearchParams(location.search);$("query").value=params.get("q")||"";["scope","company","source","experience","employment"].forEach(id=>{const value=params.get(id);if(value&&[...$(id).options].some(item=>item.value===value))$(id).value=value});$("pay").checked=params.get("pay")==="1";filter()}).catch(error=>{$("count").textContent="Board unavailable";$("jobs").innerHTML=`<div class="empty">Could not load jobs: ${escapeHtml(error.message)}</div>`});
   </script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;:&quot;09f1ce1c2fae46a796a951a6a8edd5ee&quot;}"></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
