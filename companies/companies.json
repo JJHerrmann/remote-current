@@ -252,5 +252,8 @@
   {"name": "alchemy", "type": "ashby", "key": "alchemy"},
   {"name": "chainalysis-careers", "type": "ashby", "key": "chainalysis-careers"},
   {"name": "ledger", "type": "ashby", "key": "ledger"},
-  {"name": "phantom", "type": "ashby", "key": "phantom"}
+  {"name": "phantom", "type": "ashby", "key": "phantom"},
+  {"name": "Intelligent Technical Solutions", "type": "greenhouse", "key": "its"},
+  {"name": "Pathward, Career Fairs ", "type": "greenhouse", "key": "pathwardcareerfair"},
+  {"name": "premiertruck", "type": "lever", "key": "premiertruck"}
 ]
