@@ -255,5 +255,11 @@
   {"name": "phantom", "type": "ashby", "key": "phantom"},
   {"name": "Intelligent Technical Solutions", "type": "greenhouse", "key": "its"},
   {"name": "Pathward, Career Fairs ", "type": "greenhouse", "key": "pathwardcareerfair"},
-  {"name": "premiertruck", "type": "lever", "key": "premiertruck"}
+  {"name": "premiertruck", "type": "lever", "key": "premiertruck"},
+  {"name": "Intermex Wire Transfer", "type": "greenhouse", "key": "intermexwiretransfer"},
+  {"name": "fampay", "type": "lever", "key": "fampay"},
+  {"name": "mulhalls", "type": "lever", "key": "mulhalls"},
+  {"name": "storiogroup", "type": "lever", "key": "storiogroup"},
+  {"name": "aim-solutions", "type": "ashby", "key": "aim-solutions"},
+  {"name": "apollo-information-systems", "type": "ashby", "key": "apollo-information-systems"}
 ]
