@@ -261,5 +261,18 @@
   {"name": "mulhalls", "type": "lever", "key": "mulhalls"},
   {"name": "storiogroup", "type": "lever", "key": "storiogroup"},
   {"name": "aim-solutions", "type": "ashby", "key": "aim-solutions"},
-  {"name": "apollo-information-systems", "type": "ashby", "key": "apollo-information-systems"}
+  {"name": "apollo-information-systems", "type": "ashby", "key": "apollo-information-systems"},
+  {"name": "Altos Labs", "type": "greenhouse", "key": "altoslabs"},
+  {"name": "Betterment Campus Recruiting", "type": "greenhouse", "key": "bettermentcampusrecruiting"},
+  {"name": "Doma Technology LLC", "type": "greenhouse", "key": "doma"},
+  {"name": "ENSCO, Inc.", "type": "greenhouse", "key": "ensco"},
+  {"name": "Guidepoint", "type": "greenhouse", "key": "guidepoint"},
+  {"name": "Oklo", "type": "greenhouse", "key": "oklo"},
+  {"name": "felix-construction", "type": "lever", "key": "felix-construction"},
+  {"name": "thinkahead", "type": "lever", "key": "thinkahead"},
+  {"name": "blumen", "type": "ashby", "key": "blumen"},
+  {"name": "generalintuition-medal", "type": "ashby", "key": "generalintuition-medal"},
+  {"name": "goodlord", "type": "ashby", "key": "goodlord"},
+  {"name": "idler", "type": "ashby", "key": "idler"},
+  {"name": "permitflow", "type": "ashby", "key": "permitflow"}
 ]
