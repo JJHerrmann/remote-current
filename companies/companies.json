@@ -274,5 +274,13 @@
   {"name": "generalintuition-medal", "type": "ashby", "key": "generalintuition-medal"},
   {"name": "goodlord", "type": "ashby", "key": "goodlord"},
   {"name": "idler", "type": "ashby", "key": "idler"},
-  {"name": "permitflow", "type": "ashby", "key": "permitflow"}
+  {"name": "permitflow", "type": "ashby", "key": "permitflow"},
+  {"name": "2K", "type": "greenhouse", "key": "2k"},
+  {"name": "Clockwork.io", "type": "greenhouse", "key": "clockworksystems"},
+  {"name": "Correlation One", "type": "greenhouse", "key": "correlationone"},
+  {"name": "GOAT Group", "type": "greenhouse", "key": "goatgroup"},
+  {"name": "Platform Science", "type": "greenhouse", "key": "platformscience"},
+  {"name": "Saxbys Internal Job Postings", "type": "greenhouse", "key": "saxbysinternal"},
+  {"name": "maticrobots", "type": "ashby", "key": "maticrobots"},
+  {"name": "proxima-fusion", "type": "ashby", "key": "proxima-fusion"}
 ]
