@@ -282,5 +282,10 @@
   {"name": "Platform Science", "type": "greenhouse", "key": "platformscience"},
   {"name": "Saxbys Internal Job Postings", "type": "greenhouse", "key": "saxbysinternal"},
   {"name": "maticrobots", "type": "ashby", "key": "maticrobots"},
-  {"name": "proxima-fusion", "type": "ashby", "key": "proxima-fusion"}
+  {"name": "proxima-fusion", "type": "ashby", "key": "proxima-fusion"},
+  {"name": "ABC Legal Services", "type": "greenhouse", "key": "abclegalservices"},
+  {"name": "Arcesium LLC", "type": "greenhouse", "key": "arcesiumllc"},
+  {"name": "Seven Research", "type": "greenhouse", "key": "sevenresearch"},
+  {"name": "Tr1X", "type": "greenhouse", "key": "tr1x"},
+  {"name": "pragmatike", "type": "ashby", "key": "pragmatike"}
 ]
