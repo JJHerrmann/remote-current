@@ -287,5 +287,14 @@
   {"name": "Arcesium LLC", "type": "greenhouse", "key": "arcesiumllc"},
   {"name": "Seven Research", "type": "greenhouse", "key": "sevenresearch"},
   {"name": "Tr1X", "type": "greenhouse", "key": "tr1x"},
-  {"name": "pragmatike", "type": "ashby", "key": "pragmatike"}
+  {"name": "pragmatike", "type": "ashby", "key": "pragmatike"},
+  {"name": "Fastly (Japan)", "type": "greenhouse", "key": "fastlyjapan"},
+  {"name": "G-P", "type": "greenhouse", "key": "globalizationpartners"},
+  {"name": "McMaster-Carr", "type": "greenhouse", "key": "mcmastercarr"},
+  {"name": "OpenTable", "type": "greenhouse", "key": "opentable"},
+  {"name": "agile-defense", "type": "lever", "key": "agile-defense"},
+  {"name": "gauntlet", "type": "lever", "key": "gauntlet"},
+  {"name": "outsourcedstaff", "type": "lever", "key": "outsourcedstaff"},
+  {"name": "supermove", "type": "lever", "key": "supermove"},
+  {"name": "retell-ai", "type": "ashby", "key": "retell-ai"}
 ]
