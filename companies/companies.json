@@ -304,5 +304,11 @@
   {"name": "unlimit", "type": "lever", "key": "unlimit"},
   {"name": "zerion", "type": "lever", "key": "zerion"},
   {"name": "sitemate", "type": "ashby", "key": "sitemate"},
-  {"name": "wayve", "type": "ashby", "key": "wayve"}
+  {"name": "wayve", "type": "ashby", "key": "wayve"},
+  {"name": "Haven Interactive Studios - English", "type": "greenhouse", "key": "havenenglish"},
+  {"name": "K2 Space ", "type": "greenhouse", "key": "k2spacecorporation"},
+  {"name": "Recorded Future", "type": "greenhouse", "key": "recordedfuture"},
+  {"name": "polymarket", "type": "ashby", "key": "polymarket"},
+  {"name": "sellfire", "type": "ashby", "key": "sellfire"},
+  {"name": "thndr", "type": "ashby", "key": "thndr"}
 ]
